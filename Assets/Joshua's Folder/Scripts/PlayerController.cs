@@ -9,21 +9,32 @@ public class PlayerController : MonoBehaviour
     public float collisionOffset = 0.05f;
     public ContactFilter2D movementFilter;
 
+    public SwordAttack swordAttack;
+
+
     Vector2 movementInput;
     Rigidbody2D rb;
     private Animator animator;
     List<RaycastHit2D> castCollisions = new List<RaycastHit2D>();
 
+    private bool canMove = true;
+
+    private SpriteRenderer spriteRenderer;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void FixedUpdate()
     {
-        if (movementInput != Vector2.zero)
+
+        if(canMove)
         {
+            if (movementInput != Vector2.zero)
+            {
             bool success = TryMove(movementInput);
 
             if (!success)
@@ -50,11 +61,12 @@ public class PlayerController : MonoBehaviour
             {
                 transform.localScale = new Vector3(1, 1, 1); // Reset to original scale
             }
-        }
-        else
-        {
+            }
+            else
+            {
             // Stop walking animation
             animator.SetBool("isWalking", false);
+            }
         }
     }
 
@@ -98,6 +110,40 @@ public class PlayerController : MonoBehaviour
 
     void OnFire()
     {
-        animator.SetTrigger("slashAttack");
+        StartSwordAttack();
+    }
+
+    public void StartSwordAttack()
+    {
+        if (spriteRenderer.flipX == true)
+        {
+            animator.SetBool("swordAttack", true);
+            swordAttack.AttackLeft();
+            LockMovement();
+        }
+        else
+        {
+            animator.SetBool("swordAttack", true);
+            swordAttack.AttackRight();
+            LockMovement();
+        }
+
+    }
+
+    public void EndSwordsAttack()
+    {
+       // print("stop attack");
+        swordAttack.StopAttack();
+        animator.SetBool("swordAttack", false);
+        UnlockMovement();
+    }
+
+    public void LockMovement()
+    {
+        canMove = false;
+    }
+    public void UnlockMovement()
+    {
+        canMove = true;
     }
 }
