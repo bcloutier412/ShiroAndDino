@@ -149,7 +149,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &3970441429083281488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,6 +163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: 6
+  _targetable: 1
 --- !u!95 &144528268886908464
 Animator:
   serializedVersion: 5
