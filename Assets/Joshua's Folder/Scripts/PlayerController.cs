@@ -11,15 +11,25 @@ public class PlayerController : MonoBehaviour
 
     public SwordAttack swordAttack;
 
-
     Vector2 movementInput;
     Rigidbody2D rb;
     private Animator animator;
     List<RaycastHit2D> castCollisions = new List<RaycastHit2D>();
 
     private bool canMove = true;
-
     private SpriteRenderer spriteRenderer;
+
+    // New variables for double hit functionality
+    public bool doubleHit = false;
+    private bool canDoubleHit = false;
+    public float doubleHitWindow = 2.0f; // Time allowed for double hit
+    private float doubleHitTimer = 0f;
+
+    // Cooldown variables for the double hit
+    public float doubleHitCooldown = 2.0f; // Cooldown duration
+    private float doubleHitCooldownTimer = 0f; // Tracks cooldown time
+    private bool isOnCooldown = false; // To track if cooldown is active
+
 
     void Start()
     {
@@ -30,111 +40,144 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-
-        if(canMove)
+        if (canMove)
         {
             if (movementInput != Vector2.zero)
             {
-            bool success = TryMove(movementInput);
+                bool success = TryMove(movementInput);
+                if (!success) success = TryMove(new Vector2(movementInput.x, 0));
+                if (!success) success = TryMove(new Vector2(0, movementInput.y));
 
-            if (!success)
-            {
-                success = TryMove(new Vector2(movementInput.x, 0));
-            }
+                // Update animator parameters
+                animator.SetFloat("X", movementInput.x);
+                animator.SetFloat("Y", movementInput.y);
+                animator.SetBool("isWalking", true);
 
-             if (!success)
-                {
-                    success = TryMove(new Vector2(0, movementInput.y));
-                }
-
-            // Update animator parameters
-            animator.SetFloat("X", movementInput.x);
-            animator.SetFloat("Y", movementInput.y); 
-            animator.SetBool("isWalking", true);  // Ensure this matches the Animator parameter
-
-            // Flip sprite based on the direction of X movement
-            if (movementInput.x < 0) // Moving left
-            {
-                transform.localScale = new Vector3(-1, 1, 1); // Flip on the X-axis
-            }
-            else if (movementInput.x > 0) // Moving right
-            {
-                transform.localScale = new Vector3(1, 1, 1); // Reset to original scale
-            }
+                // Flip sprite based on direction
+                if (movementInput.x < 0) transform.localScale = new Vector3(-1, 1, 1);
+                else if (movementInput.x > 0) transform.localScale = new Vector3(1, 1, 1);
             }
             else
             {
-            // Stop walking animation
-            animator.SetBool("isWalking", false);
+                animator.SetBool("isWalking", false);
             }
         }
+
+        if (canDoubleHit)
+        {
+        doubleHitTimer -= Time.fixedDeltaTime;
+        if (doubleHitTimer <= 0)
+        {
+            canDoubleHit = false;
+            animator.SetBool("doubleHit", false);
+            Debug.Log("Double hit window expired");
+        }
+        else
+        {
+            Debug.Log("Double hit window active, time left: " + doubleHitTimer);
+        }
+
+        if (isOnCooldown)
+        {
+        doubleHitCooldownTimer -= Time.fixedDeltaTime;
+        if (doubleHitCooldownTimer <= 0)
+        {
+            isOnCooldown = false;
+            Debug.Log("Double hit cooldown ended");
+        }
+        else
+        {
+            Debug.Log("Double hit cooldown active, time left: " + doubleHitCooldownTimer);
+        }
+        }
+    }
     }
 
     private bool TryMove(Vector2 direction)
     {
-
-        if(direction != Vector2.zero)
+        if (direction != Vector2.zero)
         {
-        // Casting for collisions
-        int count = rb.Cast
-        (
-            direction,  // Correctly use direction here
-            movementFilter,
-            castCollisions,
-            moveSpeed * Time.fixedDeltaTime + collisionOffset
-        );
-
-        // If no collisions, move the player
-        if (count == 0)
-        {
-            rb.MovePosition(rb.position + direction * moveSpeed * Time.fixedDeltaTime);
-            return true;
+            int count = rb.Cast(direction, movementFilter, castCollisions, moveSpeed * Time.fixedDeltaTime + collisionOffset);
+            if (count == 0)
+            {
+                rb.MovePosition(rb.position + direction * moveSpeed * Time.fixedDeltaTime);
+                return true;
+            }
         }
-        else
-        {
-            return false;
-        }
-        }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
     // Input System callback for movement
     void OnMove(InputValue movementValue)
     {
-        // Just update movement input here, let FixedUpdate handle animation
         movementInput = movementValue.Get<Vector2>();
     }
 
     void OnFire()
+{
+    if (!isOnCooldown) // Only allow attack if not on cooldown
     {
-        StartSwordAttack();
-    }
-
-    public void StartSwordAttack()
-    {
-        if (spriteRenderer.flipX == true)
+        if (canDoubleHit)
         {
-            animator.SetBool("swordAttack", true);
-            swordAttack.AttackLeft();
-            LockMovement();
+            // Trigger double attack animation
+            StartDoubleHit();
         }
         else
         {
-            animator.SetBool("swordAttack", true);
-            swordAttack.AttackRight();
-            LockMovement();
+            // Normal sword attack
+            StartSwordAttack();
         }
+    }
+    else
+    {
+        Debug.Log("Cannot attack, double hit is on cooldown");
+    }
+}
 
+
+    public void StartSwordAttack()
+{
+    Debug.Log("Sword attack started");
+
+    // Handle the regular attack
+    if (spriteRenderer.flipX == true)
+    {
+        animator.SetBool("swordAttack", true);
+        swordAttack.AttackLeft();
+    }
+    else
+    {
+        animator.SetBool("swordAttack", true);
+        swordAttack.AttackRight();
+    }
+
+    LockMovement();
+
+    // Start the double hit window
+    canDoubleHit = true;
+    doubleHitTimer = doubleHitWindow; // Set the timer to the window duration
+}
+
+
+    public void StartDoubleHit()
+    {
+        animator.SetBool("doubleHit", true); // Assume doubleHit is an animation parameter
+        if (spriteRenderer.flipX == true) swordAttack.AttackLeft();
+        else swordAttack.AttackRight();
+        canDoubleHit = false;
+        LockMovement();
+        isOnCooldown = true;
+        doubleHitCooldownTimer = doubleHitCooldown; 
+
+        // Reset double hit after performing the action
+        
     }
 
     public void EndSwordsAttack()
     {
-       // print("stop attack");
         swordAttack.StopAttack();
         animator.SetBool("swordAttack", false);
+        animator.SetBool("doubleHit", false);
         UnlockMovement();
     }
 
@@ -146,4 +189,5 @@ public class PlayerController : MonoBehaviour
     {
         canMove = true;
     }
+
 }

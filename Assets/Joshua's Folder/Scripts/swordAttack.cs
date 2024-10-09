@@ -43,7 +43,7 @@ public void AttackLeft()
 
     if (damageableObject != null)
     {
-        Vector3 parentPosition = gameObject.GetComponentInParent<Transform>().position;
+        Vector3 parentPosition = transform.parent.position;
         Vector2 direction = (Vector2)(collider.gameObject.transform.position - parentPosition).normalized;
         Vector2 knockback = direction * knockbackForce;
         damageableObject.OnHit(damage, knockback);
@@ -54,5 +54,9 @@ public void AttackLeft()
         Debug.LogWarning("Collider does not support Idamageable");
     }
 
+    }
+
+    void OnCollisionEnter2D(Collision2D other) {
+        print("test");
     }
 }
