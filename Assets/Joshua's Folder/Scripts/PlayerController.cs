@@ -30,6 +30,9 @@ public class PlayerController : MonoBehaviour
     private float doubleHitCooldownTimer = 0f; // Tracks cooldown time
     private bool isOnCooldown = false; // To track if cooldown is active
 
+    public AudioSource swordSlashAudio;
+    public AudioClip sfx1, sfx2, sfx3;
+
 
     void Start()
     {
@@ -42,55 +45,70 @@ public class PlayerController : MonoBehaviour
     {
         if (canMove)
         {
-            if (movementInput != Vector2.zero)
+            HandleMovement();
+        }
+
+        // Handle double hit window timing
+        HandleDoubleHitWindow();
+
+        // Handle cooldown timing
+        HandleCooldown();
+    }
+
+    void HandleMovement()
+    {
+        if (movementInput != Vector2.zero)
+        {
+            bool success = TryMove(movementInput);
+            if (!success) success = TryMove(new Vector2(movementInput.x, 0));
+            if (!success) success = TryMove(new Vector2(0, movementInput.y));
+
+            animator.SetFloat("X", movementInput.x);
+            animator.SetFloat("Y", movementInput.y);
+            animator.SetBool("isWalking", true);
+
+            if (movementInput.x < 0) transform.localScale = new Vector3(-1, 1, 1);
+            else if (movementInput.x > 0) transform.localScale = new Vector3(1, 1, 1);
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
+        }
+    }
+
+    void HandleDoubleHitWindow()
+    {
+        if (canDoubleHit)
+        {
+            doubleHitTimer -= Time.fixedDeltaTime;
+            if (doubleHitTimer <= 0)
             {
-                bool success = TryMove(movementInput);
-                if (!success) success = TryMove(new Vector2(movementInput.x, 0));
-                if (!success) success = TryMove(new Vector2(0, movementInput.y));
-
-                // Update animator parameters
-                animator.SetFloat("X", movementInput.x);
-                animator.SetFloat("Y", movementInput.y);
-                animator.SetBool("isWalking", true);
-
-                // Flip sprite based on direction
-                if (movementInput.x < 0) transform.localScale = new Vector3(-1, 1, 1);
-                else if (movementInput.x > 0) transform.localScale = new Vector3(1, 1, 1);
+                canDoubleHit = false;
+                animator.SetBool("doubleHit", false);
+                Debug.Log("Double hit window expired");
             }
             else
             {
-                animator.SetBool("isWalking", false);
+                Debug.Log("Double hit window active, time left: " + doubleHitTimer);
             }
         }
+    }
 
-        if (canDoubleHit)
-        {
-        doubleHitTimer -= Time.fixedDeltaTime;
-        if (doubleHitTimer <= 0)
-        {
-            canDoubleHit = false;
-            animator.SetBool("doubleHit", false);
-            Debug.Log("Double hit window expired");
-        }
-        else
-        {
-            Debug.Log("Double hit window active, time left: " + doubleHitTimer);
-        }
-
+    void HandleCooldown()
+    {
         if (isOnCooldown)
         {
-        doubleHitCooldownTimer -= Time.fixedDeltaTime;
-        if (doubleHitCooldownTimer <= 0)
-        {
-            isOnCooldown = false;
-            Debug.Log("Double hit cooldown ended");
+            doubleHitCooldownTimer -= Time.fixedDeltaTime;
+            if (doubleHitCooldownTimer <= 0)
+            {
+                isOnCooldown = false;
+                Debug.Log("Double hit cooldown ended");
+            }
+            else
+            {
+                Debug.Log("Double hit cooldown active, time left: " + doubleHitCooldownTimer);
+            }
         }
-        else
-        {
-            Debug.Log("Double hit cooldown active, time left: " + doubleHitCooldownTimer);
-        }
-        }
-    }
     }
 
     private bool TryMove(Vector2 direction)
@@ -114,64 +132,71 @@ public class PlayerController : MonoBehaviour
     }
 
     void OnFire()
-{
-    if (!isOnCooldown) // Only allow attack if not on cooldown
     {
-        if (canDoubleHit)
+        // Allow a single hit regardless of cooldown
+        if (!animator.GetBool("swordAttack"))
         {
-            // Trigger double attack animation
+            StartSwordAttack(); // Single hit always allowed
+        }
+
+        // Double hit only allowed if not on cooldown
+        if (!isOnCooldown && canDoubleHit)
+        {
             StartDoubleHit();
         }
-        else
+        else if (isOnCooldown)
         {
-            // Normal sword attack
-            StartSwordAttack();
+            Debug.Log("Double hit is on cooldown, but single hit allowed.");
         }
     }
-    else
-    {
-        Debug.Log("Cannot attack, double hit is on cooldown");
-    }
-}
 
 
     public void StartSwordAttack()
-{
-    Debug.Log("Sword attack started");
-
-    // Handle the regular attack
-    if (spriteRenderer.flipX == true)
     {
-        animator.SetBool("swordAttack", true);
-        swordAttack.AttackLeft();
+        Debug.Log("Sword attack started");
+        swordSlashAudio.Play();
+
+        if (spriteRenderer.flipX == true)
+        {
+            animator.SetBool("swordAttack", true);
+            swordAttack.AttackLeft();
+        }
+        else
+        {
+            animator.SetBool("swordAttack", true);
+            swordAttack.AttackRight();
+        }
+
+        LockMovement();
+
+        // Start the double hit window
+        canDoubleHit = true;
+        doubleHitTimer = doubleHitWindow;
     }
-    else
-    {
-        animator.SetBool("swordAttack", true);
-        swordAttack.AttackRight();
-    }
-
-    LockMovement();
-
-    // Start the double hit window
-    canDoubleHit = true;
-    doubleHitTimer = doubleHitWindow; // Set the timer to the window duration
-}
-
 
     public void StartDoubleHit()
     {
-        animator.SetBool("doubleHit", true); // Assume doubleHit is an animation parameter
-        if (spriteRenderer.flipX == true) swordAttack.AttackLeft();
-        else swordAttack.AttackRight();
-        canDoubleHit = false;
-        LockMovement();
-        isOnCooldown = true;
-        doubleHitCooldownTimer = doubleHitCooldown; 
+        Debug.Log("Double hit started");
+        swordSlashAudio.Play();
 
-        // Reset double hit after performing the action
-        
+        animator.SetBool("doubleHit", true);
+        if (spriteRenderer.flipX == true)
+        {
+            swordAttack.AttackLeft();
+        }
+        else
+        {
+            swordAttack.AttackRight();
+        }
+
+        // Prevent further double hits and trigger cooldown
+        canDoubleHit = false;
+        isOnCooldown = true;
+        doubleHitCooldownTimer = doubleHitCooldown;
+
+        LockMovement();
     }
+
 
     public void EndSwordsAttack()
     {
