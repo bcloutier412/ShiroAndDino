@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
 
     private bool canMove = true;
     private SpriteRenderer spriteRenderer;
+    private Color originalColor;  
 
     // New variables for double hit functionality
     public bool doubleHit = false;
@@ -33,20 +34,33 @@ public class PlayerController : MonoBehaviour
     public AudioSource swordSlashAudio;
     public AudioClip sfx1, sfx2, sfx3;
 
+    public float invincibilityDuration = 1.5f;  
+    private bool isInvincible = false;          
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
     }
 
     void FixedUpdate()
     {
-        if (canMove)
+        if (canMove == true)
         {
             HandleMovement();
         }
+
+       if (isInvincible == true)
+    {
+        invincibilityDuration -= Time.deltaTime;
+        if (invincibilityDuration <= 0)
+        {
+            EndInvincibility();
+        }
+    }
 
         // Handle double hit window timing
         HandleDoubleHitWindow();
@@ -214,5 +228,49 @@ public class PlayerController : MonoBehaviour
     {
         canMove = true;
     }
+
+void OnTriggerEnter2D(Collider2D other)
+{
+    // Check if the player triggered the enemy's collider
+    if (other.CompareTag("Enemy"))
+    {
+        StartInvincibility();
+    }
+}
+
+
+
+void StartInvincibility()
+{
+    isInvincible = true;
+    StartCoroutine(FlashDuringInvincibility());
+}
+
+// End Invincibility
+void EndInvincibility()
+{
+    isInvincible = false;
+    Debug.Log("Player is no longer invincible.");
+    spriteRenderer.color = Color.white;  
+    StopCoroutine(FlashDuringInvincibility());
+}
+
+// Coroutine for Flashing Effect
+IEnumerator FlashDuringInvincibility()
+{
+    while (isInvincible)
+    {
+        // Flash white
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.1f);  // Stay white for a short time
+
+        // Return to the original color
+        spriteRenderer.color = Color.white;
+        yield return new WaitForSeconds(0.1f);  // Stay original color for a short time
+    }
+}
+
+
+
 
 }
