@@ -2447,6 +2447,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 123858238313785253, guid: 5255b6d0ee45842cda2105708ec5fe37, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 832487224}
     - target: {fileID: 1071747437672997335, guid: 5255b6d0ee45842cda2105708ec5fe37, type: 3}
       propertyPath: m_SortingLayer
       value: 4
@@ -2643,6 +2647,11 @@ Transform:
   - {fileID: 1270746129}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &832487224 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 448565033735750986, guid: 36762dce28fd1491ca42a203a861237e, type: 3}
+  m_PrefabInstance: {fileID: 672928851}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &910104676
 GameObject:
   m_ObjectHideFlags: 0
