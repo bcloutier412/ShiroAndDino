@@ -35,8 +35,8 @@ public class PlayerController : MonoBehaviour
     public AudioClip sfx1, sfx2, sfx3;
 
     public float invincibilityDuration = 1.5f;  
-    private bool isInvincible = false;          
-
+    private bool isInvincible = false;
+    private float invincibilityTimer;
 
     void Start()
     {
@@ -53,14 +53,14 @@ public class PlayerController : MonoBehaviour
             HandleMovement();
         }
 
-       if (isInvincible == true)
-    {
-        invincibilityDuration -= Time.deltaTime;
-        if (invincibilityDuration <= 0)
+        if (isInvincible)
         {
-            EndInvincibility();
+            invincibilityTimer -= Time.deltaTime;
+            if (invincibilityTimer <= 0)
+            {
+                EndInvincibility();
+            }
         }
-    }
 
         // Handle double hit window timing
         HandleDoubleHitWindow();
@@ -229,25 +229,25 @@ public class PlayerController : MonoBehaviour
         canMove = true;
     }
 
-void OnTriggerEnter2D(Collider2D other)
-{
-    // Check if the player triggered the enemy's collider
-    if (other.CompareTag("Enemy"))
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        StartInvincibility();
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            // Apply damage to the enemy
+            StartInvincibility();
+        }
     }
-}
 
 
+    void StartInvincibility()
+    {
+        isInvincible = true;
+        invincibilityTimer = invincibilityDuration;
+        StartCoroutine(FlashDuringInvincibility());
+    }
 
-void StartInvincibility()
-{
-    isInvincible = true;
-    StartCoroutine(FlashDuringInvincibility());
-}
-
-// End Invincibility
-void EndInvincibility()
+    // End Invincibility
+    void EndInvincibility()
 {
     isInvincible = false;
     Debug.Log("Player is no longer invincible.");
@@ -260,7 +260,6 @@ IEnumerator FlashDuringInvincibility()
 {
     while (isInvincible)
     {
-        // Flash white
         spriteRenderer.color = Color.red;
         yield return new WaitForSeconds(0.1f);  // Stay white for a short time
 
