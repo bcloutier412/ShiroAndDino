@@ -35,8 +35,11 @@ public class PlayerController : MonoBehaviour
     public AudioClip sfx1, sfx2, sfx3;
 
     public float invincibilityDuration = 1.5f;  
-    private bool isInvincible = false;
+    public bool isInvincible = false;
     private float invincibilityTimer;
+
+    public float maxHealth = 6;  // Max health (6 = 3 full hearts)
+    public float currentHealth;
 
     void Start()
     {
@@ -44,11 +47,12 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
+        currentHealth = maxHealth;
     }
 
     void FixedUpdate()
     {
-        if (canMove == true)
+        if (canMove)
         {
             HandleMovement();
         }
@@ -164,13 +168,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
     public void StartSwordAttack()
     {
         Debug.Log("Sword attack started");
         swordSlashAudio.Play();
 
-        if (spriteRenderer.flipX == true)
+        if (spriteRenderer.flipX)
         {
             animator.SetBool("swordAttack", true);
             swordAttack.AttackLeft();
@@ -194,7 +197,7 @@ public class PlayerController : MonoBehaviour
         swordSlashAudio.Play();
 
         animator.SetBool("doubleHit", true);
-        if (spriteRenderer.flipX == true)
+        if (spriteRenderer.flipX)
         {
             swordAttack.AttackLeft();
         }
@@ -211,7 +214,6 @@ public class PlayerController : MonoBehaviour
         LockMovement();
     }
 
-
     public void EndSwordsAttack()
     {
         swordAttack.StopAttack();
@@ -224,6 +226,7 @@ public class PlayerController : MonoBehaviour
     {
         canMove = false;
     }
+    
     public void UnlockMovement()
     {
         canMove = true;
@@ -234,42 +237,68 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             // Apply damage to the enemy
-            StartInvincibility();
+            if (!isInvincible) // Only take damage if not invincible
+            {
+                TakeDamage(1); // Adjust the damage amount as needed
+                StartInvincibility(); // Start invincibility frames
+            }
         }
     }
 
-
-    void StartInvincibility()
+    public void StartInvincibility()
     {
-        isInvincible = true;
-        invincibilityTimer = invincibilityDuration;
-        StartCoroutine(FlashDuringInvincibility());
+        if (!isInvincible)
+        {
+            isInvincible = true;
+            invincibilityTimer = invincibilityDuration;
+            Debug.Log("Player is now invincible for " + invincibilityDuration + " seconds.");
+            StartCoroutine(FlashDuringInvincibility());
+        }
     }
 
     // End Invincibility
     void EndInvincibility()
-{
-    isInvincible = false;
-    Debug.Log("Player is no longer invincible.");
-    spriteRenderer.color = Color.white;  
-    StopCoroutine(FlashDuringInvincibility());
-}
-
-// Coroutine for Flashing Effect
-IEnumerator FlashDuringInvincibility()
-{
-    while (isInvincible)
     {
-        spriteRenderer.color = Color.red;
-        yield return new WaitForSeconds(0.1f);  // Stay white for a short time
-
-        // Return to the original color
-        spriteRenderer.color = Color.white;
-        yield return new WaitForSeconds(0.1f);  // Stay original color for a short time
+        isInvincible = false;
+        Debug.Log("Player is no longer invincible.");
+        spriteRenderer.color = Color.white;  
+        StopCoroutine(FlashDuringInvincibility());
     }
-}
 
+    // Coroutine for Flashing Effect
+    IEnumerator FlashDuringInvincibility()
+    {
+        while (isInvincible)
+        {
+            spriteRenderer.color = Color.red;
+            yield return new WaitForSeconds(0.1f);  // Stay red for a short time
 
+            // Return to the original color
+            spriteRenderer.color = Color.white;
+            yield return new WaitForSeconds(0.1f);  // Stay original color for a short time
+        }
+    }
 
+    public float GetHealth()
+    {
+        return currentHealth;
+    }
 
+    void Die()
+    {
+        Debug.Log("Player has died");
+        // Handle death, e.g., restart the level, show game over screen, etc.
+        animator.SetTrigger("death");
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        Debug.Log("Player took damage, current health: " + currentHealth);
+        if (currentHealth <= 0)
+        {
+            // Trigger player death
+            Die();
+        }
+    }
 }

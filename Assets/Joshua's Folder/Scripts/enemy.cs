@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour, Idamageable
     private Animator animator;
     private Rigidbody2D rb;
     private Collider2D physicsCollider;
-    private SpriteRenderer spriteRenderer;  // Added to handle color changes
+    private SpriteRenderer spriteRenderer;
 
     public float Health
     {
@@ -42,12 +42,14 @@ public class Enemy : MonoBehaviour, Idamageable
     public float _health = 6;
     public bool _targetable = true;
 
+    public float damageAmount = 1; // Amount of damage this enemy does
+
     void Start()
     {
         physicsCollider = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();  // Initialize SpriteRenderer
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void Defeated()
@@ -59,34 +61,37 @@ public class Enemy : MonoBehaviour, Idamageable
     {
         Health -= damage;
         print("Hit");
-
-        // Change color to red on hit
         spriteRenderer.color = Color.red;
-
-        // Reset color after 0.5 seconds
         StartCoroutine(ResetColor());
-
-        // Apply knockback
         rb.AddForce(knockback);
     }
 
     public void OnHit(float damage)
     {
         Health -= damage;
-
-        // Change color to red on hit
         spriteRenderer.color = Color.red;
         StartCoroutine(ResetColor());
     }
 
     IEnumerator ResetColor()
     {
-        yield return new WaitForSeconds(0.1f);  // Wait for 0.5 seconds
-        spriteRenderer.color = Color.white;     // Reset to original color (white)
+        yield return new WaitForSeconds(0.1f);
+        spriteRenderer.color = Color.white;
     }
 
     public void DestroySelf()
     {
         Defeated();
+    }
+
+    public void AttackPlayer(GameObject player)
+    {
+        PlayerController playerController = player.GetComponent<PlayerController>();
+        if (playerController != null && !playerController.isInvincible)
+        {
+            playerController.StartInvincibility(); // Trigger invincibility on the player
+            playerController.currentHealth -= damageAmount; // Apply damage to the player
+            Debug.Log("Player hit by enemy for " + damageAmount + " damage.");
+        }
     }
 }
