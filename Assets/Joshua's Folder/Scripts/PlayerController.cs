@@ -38,8 +38,11 @@ public class PlayerController : MonoBehaviour
     public bool isInvincible = false;
     private float invincibilityTimer;
 
-    public float maxHealth = 6;  // Max health (6 = 3 full hearts)
-    public float currentHealth;
+    public int maxHealth = 10;  
+    public int currentHealth;
+    public HealthBar healthBar;
+
+    private GameManager gameManager;
 
     void Start()
     {
@@ -47,8 +50,21 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
-        currentHealth = maxHealth;
+        gameManager = FindObjectOfType<GameManager>();
+        healthBar = FindObjectOfType<HealthBar>();
+        if (healthBar != null)
+        {
+            currentHealth = maxHealth;
+            healthBar.currentHealth = currentHealth;
+            healthBar.UpdateHealthBar();
+        }
+        else
+        {
+            Debug.LogError("HealthBar is not assigned or found in the scene.");
+        }
+
     }
+
 
     void FixedUpdate()
     {
@@ -124,7 +140,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                Debug.Log("Double hit cooldown active, time left: " + doubleHitCooldownTimer);
+               // Debug.Log("Double hit cooldown active, time left: " + doubleHitCooldownTimer);
             }
         }
     }
@@ -236,14 +252,17 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            // Apply damage to the enemy
-            if (!isInvincible) // Only take damage if not invincible
+            Debug.Log("Player collided with enemy");
+
+            // Apply damage to the player if not invincible
+            if (!isInvincible)
             {
-                TakeDamage(1); // Adjust the damage amount as needed
+                TakeDamage(1); // Ensure the correct amount of damage is applied
                 StartInvincibility(); // Start invincibility frames
             }
         }
     }
+
 
     public void StartInvincibility()
     {
@@ -287,18 +306,31 @@ public class PlayerController : MonoBehaviour
     void Die()
     {
         Debug.Log("Player has died");
-        // Handle death, e.g., restart the level, show game over screen, etc.
-        animator.SetTrigger("death");
+        animator.SetTrigger("death"); // Trigger death animation
+        // Assuming the death animation length is 2 seconds, adjust as necessary
+        float animationLength = 2f;
+        gameManager.ShowGameOverScreenAfterDelay(animationLength); // Call the coroutine to show game over after the animation
     }
 
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);  // Clamp health between 0 and max
+
         Debug.Log("Player took damage, current health: " + currentHealth);
+
         if (currentHealth <= 0)
         {
-            // Trigger player death
             Die();
         }
+
+        // Update the health bar
+        if (healthBar != null)
+        {
+            healthBar.currentHealth = currentHealth;
+            healthBar.UpdateHealthBar();  // Update the health bar visuals
+        }
+       
     }
+
 }

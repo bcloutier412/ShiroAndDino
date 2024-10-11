@@ -18,9 +18,11 @@ public class HealthBar : MonoBehaviour
 
     public void UpdateHealthBar()
     {
+        Debug.Log("Updating health bar. Current Health: " + currentHealth);
         for (int i = 0; i < hearts.Length; i++)
         {
             int heartValue = Mathf.Clamp(currentHealth - (i * 2), 0, 2);
+            Debug.Log("Heart " + i + " value: " + heartValue);
 
             if (heartValue == 2)
             {
@@ -31,11 +33,12 @@ public class HealthBar : MonoBehaviour
                 hearts[i].sprite = halfHeart;  // Display half heart (if applicable)
             }
             else
-            {
+            { 
                 hearts[i].sprite = emptyHeart; // Display empty heart
             }
         }
     }
+
 
     public void TakeDamage(int damage)
     {

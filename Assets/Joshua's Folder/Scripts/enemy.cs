@@ -42,7 +42,7 @@ public class Enemy : MonoBehaviour, Idamageable
     public float _health = 6;
     public bool _targetable = true;
 
-    public float damageAmount = 1; // Amount of damage this enemy does
+    public int damageAmount = 1; // Amount of damage this enemy does
 
     void Start()
     {
@@ -90,8 +90,8 @@ public class Enemy : MonoBehaviour, Idamageable
         if (playerController != null && !playerController.isInvincible)
         {
             playerController.StartInvincibility(); // Trigger invincibility on the player
-            playerController.currentHealth -= damageAmount; // Apply damage to the player
-            Debug.Log("Player hit by enemy for " + damageAmount + " damage.");
+            playerController.TakeDamage(damageAmount); // Apply damage to the player
+            //Debug.Log("Player hit by enemy for " + damageAmount + " damage.");
         }
     }
 }
