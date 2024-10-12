@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        gameOverScreen.SetActive(false); // Hide the game over screen at the start
+        gameOverScreen.SetActive(false); 
     }
 
     public void GameOver()
