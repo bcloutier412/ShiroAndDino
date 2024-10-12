@@ -24030,11 +24030,7 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
-<<<<<<< HEAD
 --- !u!1 &1500543204
-=======
---- !u!1 &1698931895
->>>>>>> 9f9f7de (pushing map)
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -24042,7 +24038,6 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<< HEAD
   - component: {fileID: 1500543208}
   - component: {fileID: 1500543207}
   - component: {fileID: 1500543206}
@@ -24050,11 +24045,6 @@ GameObject:
   - component: {fileID: 1500543209}
   m_Layer: 5
   m_Name: UI
-=======
-  - component: {fileID: 1698931896}
-  m_Layer: 0
-  m_Name: GameObject
->>>>>>> 9f9f7de (pushing map)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
