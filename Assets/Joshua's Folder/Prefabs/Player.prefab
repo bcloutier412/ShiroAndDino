@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 448565033735750986}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.55, y: -0.04, z: 0}
+  m_LocalPosition: {x: 2.6, y: -2.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -77,8 +77,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1090767439
+  m_SortingLayer: 4
   m_SortingOrder: 1
   m_Sprite: {fileID: 1714497208, guid: bab311517d02b4a81b8819502abb5d72, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -226,7 +226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a60c8975f7d254ae88e3857e2e6d9f4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 1
+  moveSpeed: 3
   collisionOffset: 0.05
   movementFilter:
     useTriggers: 0
@@ -250,6 +250,11 @@ MonoBehaviour:
   sfx1: {fileID: 0}
   sfx2: {fileID: 0}
   sfx3: {fileID: 0}
+  invincibilityDuration: 1.5
+  isInvincible: 0
+  maxHealth: 10
+  currentHealth: 10
+  healthBar: {fileID: 0}
 --- !u!1 &532726781383791860
 GameObject:
   m_ObjectHideFlags: 0
