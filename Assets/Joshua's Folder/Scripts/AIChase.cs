@@ -18,6 +18,12 @@ public class AIChase : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         enemy = GetComponent<Enemy>(); // Get reference to Enemy component
+        player = GetComponent<GameObject>();
+
+        if (player == null)
+    {
+        player = GameObject.FindWithTag("Player"); // Ensure player is assigned
+    }
     }
 
     void Update()
