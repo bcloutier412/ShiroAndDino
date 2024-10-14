@@ -75,9 +75,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 1090767439
+  m_SortingLayer: 4
+  m_SortingOrder: 1
   m_Sprite: {fileID: -372014471, guid: 240687926669d41e1a50ee07ba1c0e11, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -118,7 +118,7 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.06296253, y: -0.07345581}
@@ -165,6 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _health: 6
   _targetable: 1
+  damageAmount: 1
 --- !u!95 &144528268886908464
 Animator:
   serializedVersion: 5
@@ -200,3 +201,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 448565033735750986, guid: 36762dce28fd1491ca42a203a861237e, type: 3}
   speed: 1
+  stoppingDistance: 0.8
+  attackRange: 0.8
+  chaseRange: 8

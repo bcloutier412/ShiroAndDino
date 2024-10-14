@@ -18,6 +18,7 @@ public class EnemySpawner : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(spawnInterval);
+            Debug.Log("spawner timer: " + spawnInterval);
 
             // Choose a random spawn point from the array
             int randomIndex = Random.Range(0, spawnPoints.Length);
