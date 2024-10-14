@@ -308,7 +308,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Player has died");
         animator.SetTrigger("death"); // Trigger death animation
         // Assuming the death animation length is 2 seconds, adjust as necessary
-        float animationLength = 2f;
+        float animationLength = 1f;
         gameManager.ShowGameOverScreenAfterDelay(animationLength); // Call the coroutine to show game over after the animation
     }
 

@@ -22,7 +22,7 @@ public class HealthBar : MonoBehaviour
         for (int i = 0; i < hearts.Length; i++)
         {
             int heartValue = Mathf.Clamp(currentHealth - (i * 2), 0, 2);
-            Debug.Log("Heart " + i + " value: " + heartValue);
+            //Debug.Log("Heart " + i + " value: " + heartValue);
 
             if (heartValue == 2)
             {
