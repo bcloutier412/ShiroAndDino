@@ -1,14 +1,13 @@
 using UnityEngine;
+
 public interface Idamageable
 {
-    public float Health { set; get; }
-    public bool Targetable {set; get;}
+    float Health { set; get; }
+    bool Targetable { set; get; }
 
-   public void OnHit(float damage, Vector2 knockback);
+    void OnHit(float damage, Vector2 knockback);
 
-   public void OnHit(float damage);
+    void OnHit(float damage);
 
-   public void DestroySelf();
-
-
+    void DestroySelf();
 }
