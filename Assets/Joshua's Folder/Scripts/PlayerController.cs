@@ -5,10 +5,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 1f;
-    public float collisionOffset = 0.05f;
-    public ContactFilter2D movementFilter;
+    public PlayerData playerData; // Reference to the ScriptableObject
 
+    private float moveSpeed;
+    private float collisionOffset;
+    
     public SwordAttack swordAttack;
 
     Vector2 movementInput;
@@ -21,26 +22,24 @@ public class PlayerController : MonoBehaviour
     private Color originalColor;  
 
     // New variables for double hit functionality
-    public bool doubleHit = false;
     private bool canDoubleHit = false;
-    public float doubleHitWindow = 2.0f; // Time allowed for double hit
     private float doubleHitTimer = 0f;
-
-    // Cooldown variables for the double hit
-    public float doubleHitCooldown = 2.0f; // Cooldown duration
-    private float doubleHitCooldownTimer = 0f; // Tracks cooldown time
     private bool isOnCooldown = false; // To track if cooldown is active
+    public float doubleHitWindow = 2.0f;
+    public float doubleHitCooldown = 5.0f;
+    private float doubleHitCooldownTimer; // Timer for double hit cooldown
+
 
     public AudioSource swordSlashAudio;
     public AudioClip sfx1, sfx2, sfx3;
 
-    public float invincibilityDuration = 1.5f;  
-    public bool isInvincible = false;
     private float invincibilityTimer;
+    public bool isInvincible = false; // Invincibility state
 
-    public int maxHealth = 10;  
     public int currentHealth;
     public HealthBar healthBar;
+
+    public ContactFilter2D movementFilter;
 
     private GameManager gameManager;
 
@@ -52,9 +51,10 @@ public class PlayerController : MonoBehaviour
         originalColor = spriteRenderer.color;
         gameManager = FindObjectOfType<GameManager>();
         healthBar = FindObjectOfType<HealthBar>();
+        
         if (healthBar != null)
         {
-            currentHealth = maxHealth;
+            currentHealth = playerData.maxHealth; // Use data from ScriptableObject
             healthBar.currentHealth = currentHealth;
             healthBar.UpdateHealthBar();
         }
@@ -63,23 +63,16 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("HealthBar is not assigned or found in the scene.");
         }
 
+        // Assign values from the ScriptableObject
+        moveSpeed = playerData.moveSpeed;
+        collisionOffset = playerData.collisionOffset;
     }
-
 
     void FixedUpdate()
     {
         if (canMove)
         {
             HandleMovement();
-        }
-
-        if (isInvincible)
-        {
-            invincibilityTimer -= Time.deltaTime;
-            if (invincibilityTimer <= 0)
-            {
-                EndInvincibility();
-            }
         }
 
         // Handle double hit window timing
@@ -119,11 +112,6 @@ public class PlayerController : MonoBehaviour
             {
                 canDoubleHit = false;
                 animator.SetBool("doubleHit", false);
-                Debug.Log("Double hit window expired");
-            }
-            else
-            {
-                Debug.Log("Double hit window active, time left: " + doubleHitTimer);
             }
         }
     }
@@ -136,11 +124,6 @@ public class PlayerController : MonoBehaviour
             if (doubleHitCooldownTimer <= 0)
             {
                 isOnCooldown = false;
-                Debug.Log("Double hit cooldown ended");
-            }
-            else
-            {
-               // Debug.Log("Double hit cooldown active, time left: " + doubleHitCooldownTimer);
             }
         }
     }
@@ -178,15 +161,10 @@ public class PlayerController : MonoBehaviour
         {
             StartDoubleHit();
         }
-        else if (isOnCooldown)
-        {
-            Debug.Log("Double hit is on cooldown, but single hit allowed.");
-        }
     }
 
     public void StartSwordAttack()
     {
-        Debug.Log("Sword attack started");
         swordSlashAudio.Play();
 
         if (spriteRenderer.flipX)
@@ -204,14 +182,11 @@ public class PlayerController : MonoBehaviour
 
         // Start the double hit window
         canDoubleHit = true;
-        doubleHitTimer = doubleHitWindow;
+        doubleHitTimer = playerData.doubleHitWindow; // Use value from ScriptableObject
     }
 
     public void StartDoubleHit()
     {
-        Debug.Log("Double hit started");
-        swordSlashAudio.Play();
-
         animator.SetBool("doubleHit", true);
         if (spriteRenderer.flipX)
         {
@@ -225,7 +200,7 @@ public class PlayerController : MonoBehaviour
         // Prevent further double hits and trigger cooldown
         canDoubleHit = false;
         isOnCooldown = true;
-        doubleHitCooldownTimer = doubleHitCooldown;
+        doubleHitCooldownTimer = playerData.doubleHitCooldown; // Use value from ScriptableObject
 
         LockMovement();
     }
@@ -252,72 +227,18 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log("Player collided with enemy");
-
             // Apply damage to the player if not invincible
             if (!isInvincible)
             {
                 TakeDamage(1); // Ensure the correct amount of damage is applied
-                StartInvincibility(); // Start invincibility frames
             }
         }
-    }
-
-
-    public void StartInvincibility()
-    {
-        if (!isInvincible)
-        {
-            isInvincible = true;
-            invincibilityTimer = invincibilityDuration;
-            Debug.Log("Player is now invincible for " + invincibilityDuration + " seconds.");
-            StartCoroutine(FlashDuringInvincibility());
-        }
-    }
-
-    // End Invincibility
-    void EndInvincibility()
-    {
-        isInvincible = false;
-        Debug.Log("Player is no longer invincible.");
-        spriteRenderer.color = Color.white;  
-        StopCoroutine(FlashDuringInvincibility());
-    }
-
-    // Coroutine for Flashing Effect
-    IEnumerator FlashDuringInvincibility()
-    {
-        while (isInvincible)
-        {
-            spriteRenderer.color = Color.red;
-            yield return new WaitForSeconds(0.1f);  // Stay red for a short time
-
-            // Return to the original color
-            spriteRenderer.color = Color.white;
-            yield return new WaitForSeconds(0.1f);  // Stay original color for a short time
-        }
-    }
-
-    public float GetHealth()
-    {
-        return currentHealth;
-    }
-
-    void Die()
-    {
-        Debug.Log("Player has died");
-        animator.SetTrigger("death"); // Trigger death animation
-        // Assuming the death animation length is 2 seconds, adjust as necessary
-        float animationLength = 1f;
-        gameManager.ShowGameOverScreenAfterDelay(animationLength); // Call the coroutine to show game over after the animation
     }
 
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);  // Clamp health between 0 and max
-
-        Debug.Log("Player took damage, current health: " + currentHealth);
+        currentHealth = Mathf.Clamp(currentHealth, 0, playerData.maxHealth);  // Clamp health between 0 and max
 
         if (currentHealth <= 0)
         {
@@ -330,7 +251,39 @@ public class PlayerController : MonoBehaviour
             healthBar.currentHealth = currentHealth;
             healthBar.UpdateHealthBar();  // Update the health bar visuals
         }
-       
     }
 
+    void Die()
+    {
+        animator.SetTrigger("death"); // Trigger death animation
+        float animationLength = 1f; // Adjust as necessary
+        gameManager.ShowGameOverScreenAfterDelay(animationLength); // Call the coroutine to show game over after the animation
+    }
+
+    public void StartInvincibility()
+{
+    isInvincible = true;
+    invincibilityTimer = playerData.invincibilityDuration; // Use invincibility duration from ScriptableObject
+    StartCoroutine(HandleInvincibilityFrames());
+}
+
+private IEnumerator HandleInvincibilityFrames()
+{
+    // Flash the player's color or make them transparent during invincibility
+    float elapsedTime = 0f;
+
+    while (elapsedTime < invincibilityTimer)
+    {
+        // Toggle the visibility of the player sprite or play an invincibility animation
+        spriteRenderer.color = Color.red; // Example of making the player invisible
+        yield return new WaitForSeconds(0.1f);
+        spriteRenderer.color = originalColor;
+        yield return new WaitForSeconds(0.1f);
+
+        elapsedTime += 0.2f; // Update elapsed time
+    }
+
+    // End invincibility
+    isInvincible = false;
+}
 }

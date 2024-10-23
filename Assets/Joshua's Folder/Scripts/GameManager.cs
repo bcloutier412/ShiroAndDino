@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public GameObject gameOverScreen; // Reference to the game over UI panel
     private bool isGameOver = false;
-
+    public Text coinText;
     void Start()
     {
         gameOverScreen.SetActive(false); 
@@ -34,6 +34,20 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(delay); // Wait for the animation duration
         GameOver(); // Now show the game over screen
     }
+
+
+    // In GameManager
+
+
+public void UpdateCoinDisplay(int coinCount)
+{
+    if (coinText != null)
+    {
+        coinText.text = coinCount.ToString();
+    }
+}
+
+
 
     public void RestartGame()
     {
