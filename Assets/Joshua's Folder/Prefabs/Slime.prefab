@@ -163,6 +163,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5fe66d8050904ea488b8beb35a47818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinPrefab: {fileID: 2170686964988663700, guid: 41f1537d99a2642cda8db902c7c693b5, type: 3}
+  numberOfCoins: 1
+  bounceForceMin: 20
+  bounceForceMax: 30
   _health: 6
   _targetable: 1
   damageAmount: 1
