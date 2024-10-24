@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baaf0c2e4efc847dfb5cc6b168e571c7, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  moveSpeed: 3
+  moveSpeed: 10
   collisionOffset: 0.05
   doubleHitWindow: 2
   doubleHitCooldown: 2
