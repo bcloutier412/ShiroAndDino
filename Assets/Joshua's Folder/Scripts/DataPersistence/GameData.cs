@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class GameData 
+[CreateAssetMenu(fileName = "GameData", menuName = "ScriptableObjects/GameData", order = 1)]
+public class GameData : ScriptableObject
 {
-   public int deathCount;
+    public int totalCoinsCollected;
 
-   public GameData()
-   {
-        this.deathCount = 0;
-   }
+    public void ResetCoins()
+    {
+        totalCoinsCollected = 0;
+    }
 }

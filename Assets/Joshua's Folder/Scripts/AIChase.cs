@@ -13,42 +13,59 @@ public class AIChase : MonoBehaviour
     private Animator animator;
     private float distance;
     private Enemy enemy;
+    private SpriteRenderer spriteRenderer;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         enemy = GetComponent<Enemy>(); // Get reference to Enemy component
-        player = GetComponent<GameObject>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         if (player == null)
+        {
+            player = GameObject.FindWithTag("Player"); // Ensure player is assigned
+        }
+    }
+
+void Update()
+{
+    // Calculate the distance and direction to the player
+    distance = Vector2.Distance(transform.position, player.transform.position);
+    Vector2 direction = (player.transform.position - transform.position).normalized;
+
+    // If within chase range, move toward the player
+    if (distance < chaseRange && distance > stoppingDistance)
     {
-        player = GameObject.FindWithTag("Player"); // Ensure player is assigned
-    }
-    }
+    
 
-    void Update()
+        // Move towards the player
+        transform.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
+
+        // Update X and Y parameters in the animator
+        animator.SetFloat("X", direction.x);
+        animator.SetFloat("Y", direction.y);
+        animator.SetBool("IsWalking", true);
+        // Debug to confirm values are being passed
+        Debug.Log($"X: {direction.x}, Y: {direction.y}");
+    }
+    else
     {
-        distance = Vector2.Distance(transform.position, player.transform.position);
-        Vector2 direction = (player.transform.position - transform.position).normalized;
+        // Stop walking animation
+        animator.SetBool("IsWalking", false);
 
-        if (distance < chaseRange && distance > stoppingDistance)
+        // Attack if in range
+        if (distance <= attackRange)
         {
-            animator.SetBool("IsWalking", true);
-            transform.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
-        }
-        else
-        {
-            animator.SetBool("IsWalking", false);
-
-            if (distance <= attackRange)
-            {
-                enemy.AttackPlayer(player); // Call the attack method from Enemy script
-            }
-        }
-
-        if (animator.GetBool("Death") == true)
-        {
-            speed = 0;
+            enemy.AttackPlayer(player);
         }
     }
+
+    // Check if death animation is triggered
+    if (animator.GetBool("Death"))
+    {
+        speed = 0;
+    }
+}
+
+
 }

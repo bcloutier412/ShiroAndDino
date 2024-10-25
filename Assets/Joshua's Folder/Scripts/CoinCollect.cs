@@ -5,7 +5,7 @@ using UnityEngine;
 public class CoinCollect : MonoBehaviour
 {
     public int coinValue = 1;  // The value of the coin
-    private static int totalCoinsCollected = 0;  // Static variable to track the total number of coins collected
+    public GameData coinData;  // Reference to the CoinData ScriptableObject
 
     private Rigidbody2D rb;
     private bool isBouncing = true;
@@ -63,18 +63,13 @@ public class CoinCollect : MonoBehaviour
     // Collect the coin and increase the player's coin count
     void CollectCoin()
     {
-        totalCoinsCollected += coinValue;  // Increase the coin count
-        Debug.Log("Coins collected: " + totalCoinsCollected);
+        // Use the ScriptableObject to track total coins
+        coinData.totalCoinsCollected += coinValue;  
+        Debug.Log("Coins collected: " + coinData.totalCoinsCollected);
 
         // Assuming GameManager has a method to update the coin display
-        FindObjectOfType<GameManager>().UpdateCoinDisplay(totalCoinsCollected);
+        FindObjectOfType<GameManager>().UpdateCoinDisplay(coinData.totalCoinsCollected);
 
         Destroy(gameObject);  // Destroy the coin object
-    }
-
-    // Optionally, provide a way to get the total number of coins collected
-    public static int GetTotalCoinsCollected()
-    {
-        return totalCoinsCollected;
     }
 }
