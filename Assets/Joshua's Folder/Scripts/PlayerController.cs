@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public PlayerData playerData; // Reference to the ScriptableObject
+    public Vector3 startingPosition;
 
     private float moveSpeed;
     private float collisionOffset;
@@ -36,8 +37,7 @@ public class PlayerController : MonoBehaviour
     private float invincibilityTimer;
     public bool isInvincible = false; // Invincibility state
 
-    public int currentHealth;
-    public HealthBar healthBar;
+  
 
     public ContactFilter2D movementFilter;
 
@@ -45,28 +45,23 @@ public class PlayerController : MonoBehaviour
 
 
     void Start()
-{
-    rb = GetComponent<Rigidbody2D>();
-    animator = GetComponent<Animator>();
-    spriteRenderer = GetComponent<SpriteRenderer>();
-    originalColor = spriteRenderer.color;
-    gameManager = FindObjectOfType<GameManager>();
-    healthBar = FindObjectOfType<HealthBar>();
-
-    if (healthBar == null)
     {
-        Debug.LogError("HealthBar is not assigned!");
-        return; // Exit early if there's a critical issue
+        rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
+        gameManager = FindObjectOfType<GameManager>();
+     
+
+      
+        // Assign values from the ScriptableObject
+        moveSpeed = playerData.moveSpeed;
+        collisionOffset = playerData.collisionOffset;
+
+        // Use current health from PlayerData
+     
     }
 
-    // Assign values from the ScriptableObject
-    moveSpeed = playerData.moveSpeed;
-    collisionOffset = playerData.collisionOffset;
-
-    // Set initial health
-    currentHealth = playerData.maxHealth;
-    healthBar.UpdateHealthBar();
-}
 
 
     void FixedUpdate()
@@ -236,29 +231,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
- public void TakeDamage(int damage)
-{
-    Debug.Log("Player took damage: " + damage);
-    currentHealth -= damage;
-    currentHealth = Mathf.Clamp(currentHealth, 0, playerData.maxHealth); // Clamp health between 0 and max
-
-    Debug.Log("Current Health after damage: " + currentHealth);
-
-    if (currentHealth <= 0)
+    public void TakeDamage(int damage)
     {
-        Die();
-    }
+        Debug.Log("Player took damage: " + damage);
+        playerData.currentHealth -= damage; // Directly update PlayerData's current health
+        playerData.currentHealth = Mathf.Clamp(playerData.currentHealth, 0, playerData.maxHealth); // Clamp health
 
-    // Update the health bar through HealthBar script
-    if (healthBar != null)
-    {
-        healthBar.TakeDamage(damage);
+        Debug.Log("Current Health after damage: " + playerData.currentHealth);
+
+        if (playerData.currentHealth <= 0)
+        {
+            Die();
+        }
+
+    
+      
     }
-    else
-    {
-        Debug.LogError("HealthBar reference is null.");
-    }
-}
 
 
 

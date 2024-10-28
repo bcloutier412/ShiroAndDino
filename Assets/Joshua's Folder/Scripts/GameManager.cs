@@ -56,14 +56,14 @@ public void RestartGame()
     Time.timeScale = 1; // Unfreeze the game
 
     // Reset player stats through the ScriptableObject
-    PlayerData.ResetPlayerStats(); 
+    PlayerData.ResetPlayerStats();
 
-    // Optionally update the UI to show the reset health if applicable
-    // UpdateHealthDisplay(GameData.currentHealth); // If you have a method for health display
+        // Optionally update the UI to show the reset health if applicable
+        // UpdateHealthDisplay(GameData.currentHealth); // If you have a method for health display
 
-    // Reload the current scene
-    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
-    Debug.Log("Scene reloaded");
+        // Reload the current scene
+        SceneManager.LoadScene(1);
+        Debug.Log("Scene reloaded");
 }
 
 

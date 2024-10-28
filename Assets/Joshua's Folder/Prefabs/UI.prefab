@@ -269,6 +269,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameOverScreen: {fileID: 5488540304283766316}
   coinText: {fileID: 1892714956672633049}
+  GameData: {fileID: 11400000, guid: 6d2ea8888917d406e85c191d7365acb8, type: 2}
+  PlayerData: {fileID: 11400000, guid: 8aff729d4da8f4e2d87150ea60f963a0, type: 2}
 --- !u!1 &3742344703305702417
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,8 +934,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b125644e00ac44eea3946a99b800cef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
-  currentHealth: 10
+  playerData: {fileID: 11400000, guid: 8aff729d4da8f4e2d87150ea60f963a0, type: 2}
   hearts:
   - {fileID: 2827334402308725876}
   - {fileID: 8271101621685162725}

@@ -13,7 +13,13 @@ public class HealthBar : MonoBehaviour
     void Start()
     {
         // Initialize current health from PlayerData and update the health bar
-        playerData.currentHealth = playerData.maxHealth; // Ensure health is set at the start
+        // playerData.currentHealth = playerData.maxHealth; // Ensure health is set at the start
+        playerData.maxHealth = playerData.currentHealth;
+        UpdateHealthBar();
+    }
+
+    void FixedUpdate()
+    {
         UpdateHealthBar();
     }
 
@@ -33,7 +39,7 @@ public class HealthBar : MonoBehaviour
                 hearts[i].sprite = halfHeart;  // Display half heart (if applicable)
             }
             else
-            { 
+            {
                 hearts[i].sprite = emptyHeart; // Display empty heart
             }
         }

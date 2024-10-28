@@ -122,14 +122,6 @@ public class Enemy : MonoBehaviour, Idamageable
         rb.AddForce(knockback);
     }
 
-    public void OnHit(float damage)
-    {
-        if (isDead) return;
-        Health -= damage;
-        spriteRenderer.color = Color.red;
-        StartCoroutine(ResetColor());
-    }
-
     IEnumerator ResetColor()
     {
         yield return new WaitForSeconds(0.1f);
@@ -150,6 +142,11 @@ public class Enemy : MonoBehaviour, Idamageable
     }
 
     public void DestroySelf()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnHit(float damage)
     {
         throw new System.NotImplementedException();
     }
