@@ -12,8 +12,11 @@ public class GameManager : MonoBehaviour
     public GameData GameData; // Reference to the GameData ScriptableObject
     private bool isGameOver = false;
 
+    public PlayerData PlayerData;
+
     void Start()
     {
+        PlayerData.currentHealth = PlayerData.maxHealth;
         gameOverScreen.SetActive(false);
         UpdateCoinDisplay(GameData.totalCoinsCollected); // Initialize display with current coin count
     }
@@ -47,15 +50,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void RestartGame()
+public void RestartGame()
 {
+    Debug.Log("RestartGame called");
     Time.timeScale = 1; // Unfreeze the game
 
-    GameData.ResetCoins(); // Reset the coin count to 0
-    UpdateCoinDisplay(GameData.totalCoinsCollected); // Update UI to show the reset coin count
+    // Reset player stats through the ScriptableObject
+    PlayerData.ResetPlayerStats(); 
 
-    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Reload the current scene
+    // Optionally update the UI to show the reset health if applicable
+    // UpdateHealthDisplay(GameData.currentHealth); // If you have a method for health display
+
+    // Reload the current scene
+    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
+    Debug.Log("Scene reloaded");
 }
+
+
 
 
     public void QuitGame() => Application.Quit(); // Quit the game

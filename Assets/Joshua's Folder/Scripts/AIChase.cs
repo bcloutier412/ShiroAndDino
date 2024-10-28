@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class AIChase : MonoBehaviour
 {
-    public GameObject player;
     public float speed;
     public float stoppingDistance = 1.0f;
     public float attackRange = 0.8f;
-    public float chaseRange = 8;
+    public float chaseRange = 8.0f;
 
+    private GameObject player;
     private Animator animator;
     private float distance;
     private Enemy enemy;
@@ -18,54 +18,58 @@ public class AIChase : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        enemy = GetComponent<Enemy>(); // Get reference to Enemy component
+        enemy = GetComponent<Enemy>(); 
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        // Find and assign the player clone in the scene
+        SetPlayerReference();
+    }
+
+    void Update()
+    {
+        if (player == null)
+        {
+            SetPlayerReference(); // Continuously check if the player reference is lost
+            return;
+        }
+
+        // Calculate the distance and direction to the player
+        distance = Vector2.Distance(transform.position, player.transform.position);
+        Vector2 direction = (player.transform.position - transform.position).normalized;
+
+        if (distance < chaseRange && distance > stoppingDistance)
+        {
+            // Move towards the player
+            transform.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
+
+            animator.SetFloat("X", direction.x);
+            animator.SetFloat("Y", direction.y);
+            animator.SetBool("IsWalking", true);
+        }
+        else
+        {
+            animator.SetBool("IsWalking", false);
+
+            if (distance <= attackRange)
+            {
+                enemy.AttackPlayer(player);
+            }
+        }
+
+        if (animator.GetBool("Death"))
+        {
+            speed = 0;
+        }
+    }
+
+    private void SetPlayerReference()
+    {
+        // Attempt to find the player clone with the "Player" tag in the active scene
+        player = GameObject.FindWithTag("Player");
 
         if (player == null)
         {
-            player = GameObject.FindWithTag("Player"); // Ensure player is assigned
+            Debug.LogWarning("No player instance found with the 'Player' tag.");
         }
     }
-
-void Update()
-{
-    // Calculate the distance and direction to the player
-    distance = Vector2.Distance(transform.position, player.transform.position);
-    Vector2 direction = (player.transform.position - transform.position).normalized;
-
-    // If within chase range, move toward the player
-    if (distance < chaseRange && distance > stoppingDistance)
-    {
-    
-
-        // Move towards the player
-        transform.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
-
-        // Update X and Y parameters in the animator
-        animator.SetFloat("X", direction.x);
-        animator.SetFloat("Y", direction.y);
-        animator.SetBool("IsWalking", true);
-        // Debug to confirm values are being passed
-        Debug.Log($"X: {direction.x}, Y: {direction.y}");
-    }
-    else
-    {
-        // Stop walking animation
-        animator.SetBool("IsWalking", false);
-
-        // Attack if in range
-        if (distance <= attackRange)
-        {
-            enemy.AttackPlayer(player);
-        }
-    }
-
-    // Check if death animation is triggered
-    if (animator.GetBool("Death"))
-    {
-        speed = 0;
-    }
-}
-
-
 }

@@ -11,4 +11,12 @@ public class PlayerData : ScriptableObject
     public float invincibilityDuration = 1.5f;  
     
     public int maxHealth = 10;  
+    public int currentHealth; // Add a current health variable
+
+    // Reset the player stats to their initial values
+    public void ResetPlayerStats()
+    {
+        currentHealth = maxHealth; // Reset current health to maximum
+        // Reset any other stats if necessary
+    }
 }

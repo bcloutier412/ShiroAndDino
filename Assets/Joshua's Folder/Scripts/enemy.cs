@@ -17,6 +17,9 @@ public class Enemy : MonoBehaviour, Idamageable
 
     private Vector2 previousPosition; // To store previous position for direction check
 
+    public PlayerData playerData;  // Reference to the PlayerData ScriptableObject
+
+
     public float Health
     {
         set
@@ -132,6 +135,7 @@ public class Enemy : MonoBehaviour, Idamageable
         yield return new WaitForSeconds(0.1f);
         spriteRenderer.color = Color.white;
     }
+
 
     public void AttackPlayer(GameObject player)
     {
