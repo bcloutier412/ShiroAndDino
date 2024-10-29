@@ -17,5 +17,8 @@ MonoBehaviour:
   doubleHitWindow: 2
   doubleHitCooldown: 2
   invincibilityDuration: 1.5
-  maxHealth: 0
-  currentHealth: 0
+  maxHealth: 10
+  currentHealth: 3
+  xPosition: 9.963959
+  yPosition: 61.641106
+  zPosition: 0

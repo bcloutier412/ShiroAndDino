@@ -14,11 +14,29 @@ public class GameManager : MonoBehaviour
 
     public PlayerData PlayerData;
 
+    public GameObject pauseMenuScreen;
+
+    public static string lastEntranceName;
+    private bool isPaused = false;
+
+
     void Start()
     {
-        PlayerData.currentHealth = PlayerData.maxHealth;
+        //PlayerData.currentHealth = PlayerData.maxHealth;
         gameOverScreen.SetActive(false);
         UpdateCoinDisplay(GameData.totalCoinsCollected); // Initialize display with current coin count
+    }
+
+    void Update()
+    {
+        // Toggle pause state when pressing Escape
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isPaused)
+                Resume();
+            else
+                Pause();
+        }
     }
 
     public void GameOver()
@@ -50,6 +68,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+public void Resume()
+    {
+        pauseMenuScreen.SetActive(false);
+        Time.timeScale = 1f;  // Resume the game
+        isPaused = false;
+    }
+
+    void Pause()
+    {
+        pauseMenuScreen.SetActive(true);
+        Time.timeScale = 0f;  // Freeze the game
+        isPaused = true;
+    }
+
 public void RestartGame()
 {
     Debug.Log("RestartGame called");
@@ -66,8 +99,17 @@ public void RestartGame()
         Debug.Log("Scene reloaded");
 }
 
-
-
+public void MainMenu()
+    {
+        Time.timeScale = 1f;  // Ensure time is reset
+        SceneManager.LoadScene(0);  // Load the main menu scene (replace with the actual scene name)
+    }
 
     public void QuitGame() => Application.Quit(); // Quit the game
+
+public static void SetLastEntrance(string entranceName)
+    {
+        lastEntranceName = entranceName;
+    }
+
 }

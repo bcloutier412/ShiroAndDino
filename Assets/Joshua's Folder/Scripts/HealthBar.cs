@@ -10,17 +10,34 @@ public class HealthBar : MonoBehaviour
     public Sprite halfHeart;       // Half heart sprite (optional)
     public Sprite emptyHeart;      // Empty heart sprite
 
+    private int healthCounter;
+
     void Start()
     {
         // Initialize current health from PlayerData and update the health bar
         // playerData.currentHealth = playerData.maxHealth; // Ensure health is set at the start
-        playerData.maxHealth = playerData.currentHealth;
+        if(playerData.currentHealth == 0)
+        {
+            playerData.maxHealth = playerData.currentHealth;
+        }
+        healthCounter = playerData.currentHealth;
         UpdateHealthBar();
     }
 
     void FixedUpdate()
     {
+       // UpdateHealthBar();
+       if (playerData.currentHealth < healthCounter)
+       {
+         healthCounter--;
+         UpdateHealthBar();
+         // Play hurt sound here
+         // Play particle effects here
+       }
+       else if (playerData.currentHealth > healthCounter)
+       {
         UpdateHealthBar();
+       }
     }
 
     public void UpdateHealthBar()
@@ -45,17 +62,19 @@ public class HealthBar : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
+   /* 
+   public void TakeDamage(int damage)
     {
         playerData.currentHealth -= damage; // Use the current health from PlayerData
-        playerData.currentHealth = Mathf.Clamp(playerData.currentHealth, 0, playerData.maxHealth);
+        //playerData.currentHealth = Mathf.Clamp(playerData.currentHealth, 0, playerData.maxHealth);
         UpdateHealthBar();
     }
+    */
 
     public void Heal(int healAmount)
     {
         playerData.currentHealth += healAmount; // Use the current health from PlayerData
-        playerData.currentHealth = Mathf.Clamp(playerData.currentHealth, 0, playerData.maxHealth);
+        //playerData.currentHealth = Mathf.Clamp(playerData.currentHealth, 0, playerData.maxHealth);
         UpdateHealthBar();
     }
 }

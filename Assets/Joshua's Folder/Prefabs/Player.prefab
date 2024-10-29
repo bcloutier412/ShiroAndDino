@@ -227,16 +227,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: 8aff729d4da8f4e2d87150ea60f963a0, type: 2}
+  startingPosition: {x: 0, y: 0, z: 0}
   swordAttack: {fileID: 699357878754292605}
-  doubleHitWindow: 0.5
+  doubleHitWindow: 1
   doubleHitCooldown: 2
   swordSlashAudio: {fileID: 6124349107016720655}
   sfx1: {fileID: 0}
   sfx2: {fileID: 0}
   sfx3: {fileID: 0}
   isInvincible: 0
-  currentHealth: 10
-  healthBar: {fileID: 0}
   movementFilter:
     useTriggers: 0
     useLayerMask: 0

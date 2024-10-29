@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -51,14 +52,12 @@ public class PlayerController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
         gameManager = FindObjectOfType<GameManager>();
-     
-
-      
         // Assign values from the ScriptableObject
         moveSpeed = playerData.moveSpeed;
         collisionOffset = playerData.collisionOffset;
-
-        // Use current health from PlayerData
+    
+       Vector3 savedPosition = playerData.LoadPlayerPosition();
+       transform.position = savedPosition;
      
     }
 
@@ -279,8 +278,15 @@ private IEnumerator HandleInvincibilityFrames()
 
         elapsedTime += 0.2f; // Update elapsed time
     }
-
     // End invincibility
     isInvincible = false;
 }
+
+void OnApplicationQuit()
+    {
+        // Save the player's current position when the game closes
+        playerData.SavePlayerPosition(transform.position);
+    }
+
+
 }
