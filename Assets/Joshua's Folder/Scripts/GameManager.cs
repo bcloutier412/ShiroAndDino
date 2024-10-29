@@ -76,6 +76,7 @@ public void Resume()
         isPaused = false;
     }
 
+
     void Pause()
     {
         pauseMenuScreen.SetActive(true);

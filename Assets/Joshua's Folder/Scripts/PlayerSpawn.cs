@@ -3,56 +3,69 @@ using UnityEngine.SceneManagement;
 
 public class PlayerSpawn : MonoBehaviour
 {
-    public Transform door1Spawn;
-    public Transform door2Spawn;
-    public Transform defaultSpawn;
+    public string defaultSpawnDoorName = "defaultSpawn"; // Default spawn door name if no match is found
 
     private void OnEnable()
     {
-        // Subscribe to the scene loaded event
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
     {
-        // Unsubscribe from the scene loaded event
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Optionally call this here if you need to set the position when the scene loads
         SetPlayerSpawnPosition();
-        OnDisable();
     }
 
     void Start()
     {
-        // Set player spawn position at the start of the game
         SetPlayerSpawnPosition();
     }
 
     void SetPlayerSpawnPosition()
     {
-        // Set the player position once based on the entrance.
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
         {
-            player.transform.position = GetSpawnPosition();
+            Vector3 spawnPosition = GetSpawnPosition();
+            Debug.Log($"Setting Player Position: {spawnPosition}");
+            player.transform.position = spawnPosition;
+        }
+        else
+        {
+            Debug.LogWarning("Player GameObject not found!");
         }
     }
 
+
     Vector3 GetSpawnPosition()
     {
-        // Determine the spawn position based on last entrance
-        switch (GameManager.lastEntranceName)
+        string lastEntranceName = GameManager.lastEntranceName; // Keep as string
+        GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("SpawnTag");
+
+        foreach (GameObject spawnPoint in spawnPoints)
         {
-            case "door1":
-                return door1Spawn.position;
-            case "door2":
-                return door2Spawn.position;
-            default:
-                return defaultSpawn.position;
+            if (spawnPoint.name == lastEntranceName) // Compare names as strings
+            {
+                return spawnPoint.transform.position;
+            }
+        }
+
+        // If no matching spawn point is found, use the default spawn
+        GameObject defaultSpawnPoint = GameObject.Find(defaultSpawnDoorName);
+        if (defaultSpawnPoint != null)
+        {
+            return defaultSpawnPoint.transform.position; // Return the position of the default spawn point
+        }
+        else
+        {
+            Debug.LogWarning("No matching spawn point found, and default spawn point is also missing.");
+            return Vector3.zero; // Return Vector3.zero if no spawn points are found
         }
     }
+
+
 }

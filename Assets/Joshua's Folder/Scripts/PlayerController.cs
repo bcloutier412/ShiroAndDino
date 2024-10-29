@@ -7,11 +7,11 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     public PlayerData playerData; // Reference to the ScriptableObject
-    public Vector3 startingPosition;
+
 
     private float moveSpeed;
     private float collisionOffset;
-    
+
     public SwordAttack swordAttack;
 
     Vector2 movementInput;
@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
 
     private bool canMove = true;
     private SpriteRenderer spriteRenderer;
-    private Color originalColor;  
+    private Color originalColor;
 
     // New variables for double hit functionality
     private bool canDoubleHit = false;
@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     private float invincibilityTimer;
     public bool isInvincible = false; // Invincibility state
 
-  
+
 
     public ContactFilter2D movementFilter;
 
@@ -55,10 +55,10 @@ public class PlayerController : MonoBehaviour
         // Assign values from the ScriptableObject
         moveSpeed = playerData.moveSpeed;
         collisionOffset = playerData.collisionOffset;
-    
-       Vector3 savedPosition = playerData.LoadPlayerPosition();
-       transform.position = savedPosition;
-     
+
+        Vector3 savedPosition = playerData.LoadPlayerPosition();
+        transform.position = savedPosition;
+
     }
 
 
@@ -212,7 +212,7 @@ public class PlayerController : MonoBehaviour
     {
         canMove = false;
     }
-    
+
     public void UnlockMovement()
     {
         canMove = true;
@@ -243,8 +243,8 @@ public class PlayerController : MonoBehaviour
             Die();
         }
 
-    
-      
+
+
     }
 
 
@@ -257,32 +257,32 @@ public class PlayerController : MonoBehaviour
     }
 
     public void StartInvincibility()
-{
-    isInvincible = true;
-    invincibilityTimer = playerData.invincibilityDuration; // Use invincibility duration from ScriptableObject
-    StartCoroutine(HandleInvincibilityFrames());
-}
-
-private IEnumerator HandleInvincibilityFrames()
-{
-    // Flash the player's color or make them transparent during invincibility
-    float elapsedTime = 0f;
-
-    while (elapsedTime < invincibilityTimer)
     {
-        // Toggle the visibility of the player sprite or play an invincibility animation
-        spriteRenderer.color = Color.red; // Example of making the player invisible
-        yield return new WaitForSeconds(0.1f);
-        spriteRenderer.color = originalColor;
-        yield return new WaitForSeconds(0.1f);
-
-        elapsedTime += 0.2f; // Update elapsed time
+        isInvincible = true;
+        invincibilityTimer = playerData.invincibilityDuration; // Use invincibility duration from ScriptableObject
+        StartCoroutine(HandleInvincibilityFrames());
     }
-    // End invincibility
-    isInvincible = false;
-}
 
-void OnApplicationQuit()
+    private IEnumerator HandleInvincibilityFrames()
+    {
+        // Flash the player's color or make them transparent during invincibility
+        float elapsedTime = 0f;
+
+        while (elapsedTime < invincibilityTimer)
+        {
+            // Toggle the visibility of the player sprite or play an invincibility animation
+            spriteRenderer.color = Color.red; // Example of making the player invisible
+            yield return new WaitForSeconds(0.1f);
+            spriteRenderer.color = originalColor;
+            yield return new WaitForSeconds(0.1f);
+
+            elapsedTime += 0.2f; // Update elapsed time
+        }
+        // End invincibility
+        isInvincible = false;
+    }
+
+    void OnApplicationQuit()
     {
         // Save the player's current position when the game closes
         playerData.SavePlayerPosition(transform.position);

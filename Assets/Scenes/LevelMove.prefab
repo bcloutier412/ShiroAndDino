@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7658188814002038607}
   m_Layer: 0
   m_Name: LevelMove
-  m_TagString: Untagged
+  m_TagString: SpawnTag
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -91,3 +91,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneBuildIndex: 2
+  entranceName: 

@@ -16,7 +16,7 @@ public class LevelMove_Ref : MonoBehaviour
             GameManager.lastEntranceName = entranceName;
 
             // Move to the specified scene
-            SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Single);
+            SceneManager.LoadScene(sceneBuildIndex/*, LoadSceneMode.Single*/);
         }
     }
 }
