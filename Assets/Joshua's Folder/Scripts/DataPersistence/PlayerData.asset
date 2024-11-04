@@ -18,7 +18,8 @@ MonoBehaviour:
   doubleHitCooldown: 2
   invincibilityDuration: 1.5
   maxHealth: 10
-  currentHealth: 3
-  xPosition: 9.963959
-  yPosition: 61.641106
-  zPosition: 0
+  currentHealth: 9
+  originalPosition: {x: 2.6, y: -2.5, z: 0}
+  savePosition: {x: 9.6999445, y: 75.92009, z: 0.031952735}
+  sceneIndex: 2
+  finishedLoadingData: 0

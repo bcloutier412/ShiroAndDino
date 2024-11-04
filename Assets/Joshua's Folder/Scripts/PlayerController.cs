@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -31,40 +32,69 @@ public class PlayerController : MonoBehaviour
     public float doubleHitCooldown = 5.0f;
     private float doubleHitCooldownTimer; // Timer for double hit cooldown
 
-
     public AudioSource swordSlashAudio;
     public AudioClip sfx1, sfx2, sfx3;
 
     private float invincibilityTimer;
     public bool isInvincible = false; // Invincibility state
 
+    public int sceneIndex;
 
 
     public ContactFilter2D movementFilter;
 
     private GameManager gameManager;
 
+    Vector3 startPosition;
 
     void Start()
     {
+
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
         gameManager = FindObjectOfType<GameManager>();
+
+        moveSpeed = playerData.moveSpeed;
+        collisionOffset = playerData.collisionOffset;
+        startPosition = playerData.LoadPlayerPosition();
+        transform.position = startPosition;
+        //Vector3 startPosition = playerData.LoadPlayerPosition();
+
+        if (playerData.finishedLoadingData == true)
+            return;
+        else
+        {
+            LoadPlayerData();
+            playerData.finishedLoadingData = true;
+        }
+    }
+
+    void LoadPlayerData()
+    {
         // Assign values from the ScriptableObject
         moveSpeed = playerData.moveSpeed;
         collisionOffset = playerData.collisionOffset;
 
-        Vector3 savedPosition = playerData.LoadPlayerPosition();
-        transform.position = savedPosition;
-
+        // Load the saved scene index
+        int sceneIndex = playerData.LoadSceneIndex();
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        // Only load a new scene if the saved index is different from the current scene
+        if (sceneIndex != currentSceneIndex)
+        {
+            Debug.Log($"Loading scene index: {sceneIndex} (current: {currentSceneIndex})");
+            SceneManager.LoadScene(sceneIndex);
+            // playerData.SaveSceneIndex(currentSceneIndex);
+        }
+        //Vector3 startPosition = playerData.LoadPlayerPosition();
     }
 
 
 
     void FixedUpdate()
     {
+        // playerData.SavePlayerPosition(transform.position);
         if (canMove)
         {
             HandleMovement();
@@ -282,11 +312,17 @@ public class PlayerController : MonoBehaviour
         isInvincible = false;
     }
 
-    void OnApplicationQuit()
+    private void OnApplicationQuit()
     {
-        // Save the player's current position when the game closes
+        // Save the player's current position
         playerData.SavePlayerPosition(transform.position);
+
+        // Save the current scene build index before quitting
+        sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        playerData.SaveSceneIndex(sceneIndex);
+        playerData.finishedLoadingData = false;
     }
+
 
 
 }

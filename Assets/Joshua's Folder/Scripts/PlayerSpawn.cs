@@ -5,6 +5,8 @@ public class PlayerSpawn : MonoBehaviour
 {
     public string defaultSpawnDoorName = "defaultSpawn"; // Default spawn door name if no match is found
 
+    public PlayerData playerData; 
+
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -17,28 +19,38 @@ public class PlayerSpawn : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        SetPlayerSpawnPosition();
+        if (playerData.finishedLoadingData == true) {
+            Debug.Log("SETTING POSITION TO SPAWN");
+            SetPlayerSpawnPosition();
+        }
     }
 
     void Start()
     {
+         if (playerData.finishedLoadingData == true) {
         SetPlayerSpawnPosition();
+         }
     }
 
-    void SetPlayerSpawnPosition()
+void SetPlayerSpawnPosition()
+{
+    GameObject player = GameObject.FindWithTag("Player");
+    if (player != null)
     {
-        GameObject player = GameObject.FindWithTag("Player");
-        if (player != null)
+        Vector3 spawnPosition;
+        if (playerData.IsContinuingGame())
         {
-            Vector3 spawnPosition = GetSpawnPosition();
-            Debug.Log($"Setting Player Position: {spawnPosition}");
-            player.transform.position = spawnPosition;
+            //spawnPosition = playerData.LoadPlayerPosition();
+             spawnPosition = GetSpawnPosition();
         }
         else
         {
-            Debug.LogWarning("Player GameObject not found!");
+            spawnPosition = GetSpawnPosition();
         }
+        player.transform.position = spawnPosition;
     }
+}
+
 
 
     Vector3 GetSpawnPosition()
@@ -58,7 +70,9 @@ public class PlayerSpawn : MonoBehaviour
         GameObject defaultSpawnPoint = GameObject.Find(defaultSpawnDoorName);
         if (defaultSpawnPoint != null)
         {
+            Debug.LogWarning("Default spawn point");
             return defaultSpawnPoint.transform.position; // Return the position of the default spawn point
+    
         }
         else
         {

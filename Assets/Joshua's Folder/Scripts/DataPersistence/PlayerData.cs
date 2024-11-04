@@ -18,11 +18,12 @@ public class PlayerData : ScriptableObject
     // Store the original start position
     public Vector3 originalPosition = new Vector3(2.6f, -2.5f, 0f);
 
-    public Dictionary<string, Vector3> savedPositions = new Dictionary<string, Vector3>();
+    //public Dictionary<string, Vector3> savedPositions = new Dictionary<string, Vector3>();
 
-    public float xPosition;
-    public float yPosition;
-    public float zPosition;
+   public Vector3 savePosition;
+    public int sceneIndex;
+
+    public bool finishedLoadingData = false;
 
 
     // Reset stats and position
@@ -32,20 +33,45 @@ public class PlayerData : ScriptableObject
         SavePlayerPosition(originalPosition);  // Reset position to the original
     }
 
-    public void SavePlayerPosition(Vector3 position)
-    {
-        PlayerPrefs.SetFloat("PlayerX", position.x);
-        PlayerPrefs.SetFloat("PlayerY", position.y);
-        PlayerPrefs.SetFloat("PlayerZ", position.z);
-        PlayerPrefs.Save();
-    }
+public void SavePlayerPosition(Vector3 position)
+{
+    // Save the position directly to the savePosition variable
+    savePosition = position;
+    Debug.Log($"Position saved: {savePosition}");
+}
 
-    public Vector3 LoadPlayerPosition()
-    {
-        return new Vector3(
-            PlayerPrefs.GetFloat("PlayerX", originalPosition.x),
-            PlayerPrefs.GetFloat("PlayerY", originalPosition.y),
-            PlayerPrefs.GetFloat("PlayerZ", originalPosition.z)
-        );
-    }
+public Vector3 LoadPlayerPosition()
+{
+    // Load the position from savePosition
+    Debug.Log($"Position loaded: {savePosition}");
+    return savePosition;
+}
+
+
+public void SaveGameStatus(bool isContinuing)
+{
+    PlayerPrefs.SetInt("isContinuing", isContinuing ? 1 : 0);
+    PlayerPrefs.Save();
+}
+
+public bool IsContinuingGame()
+{
+    return PlayerPrefs.GetInt("isContinuing", 0) == 1;
+}
+
+
+public void SaveSceneIndex(int index)
+{
+    sceneIndex = index;
+    //PlayerPrefs.SetInt("LastSceneIndex", sceneIndex);
+    //PlayerPrefs.Save();
+}
+
+public int LoadSceneIndex()
+{
+   // return PlayerPrefs.GetInt("LastSceneIndex", sceneIndex); // Default to 0 (main menu) if no scene index is found
+   return sceneIndex;
+}
+
+
 }
