@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 
 public class GameManager : MonoBehaviour
@@ -20,19 +19,12 @@ public class GameManager : MonoBehaviour
     public static string lastEntranceName;
     private bool isPaused = false;
 
-    public int loadScene;
-
 
     void Start()
     {
         //PlayerData.currentHealth = PlayerData.maxHealth;
         gameOverScreen.SetActive(false);
         UpdateCoinDisplay(GameData.totalCoinsCollected); // Initialize display with current coin count
-      /* int lastSceneIndex = PlayerData.LoadSceneIndex(); // Assuming you have a method to get the last saved scene index
-        if (SceneManager.GetActiveScene().buildIndex != lastSceneIndex)
-        {
-            SceneManager.LoadScene(loadScene);
-        }*/
     }
 
     void Update()
@@ -120,7 +112,5 @@ public static void SetLastEntrance(string entranceName)
     {
         lastEntranceName = entranceName;
     }
-
-
 
 }

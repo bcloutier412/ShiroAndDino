@@ -539,6 +539,7 @@ MonoBehaviour:
   GameData: {fileID: 11400000, guid: 6d2ea8888917d406e85c191d7365acb8, type: 2}
   PlayerData: {fileID: 11400000, guid: 8aff729d4da8f4e2d87150ea60f963a0, type: 2}
   pauseMenuScreen: {fileID: 5963347180027989706}
+  loadScene: 0
 --- !u!1 &2594851778243734703
 GameObject:
   m_ObjectHideFlags: 0
@@ -1464,7 +1465,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 72
+    m_FontSize: 64
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0

@@ -73,8 +73,6 @@ public class PlayerController : MonoBehaviour
 
     void LoadPlayerData()
     {
-        // Assign values from the ScriptableObject
-        moveSpeed = playerData.moveSpeed;
         collisionOffset = playerData.collisionOffset;
 
         // Load the saved scene index
