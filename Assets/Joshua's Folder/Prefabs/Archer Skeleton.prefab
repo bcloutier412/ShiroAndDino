@@ -98,12 +98,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44ee99e892a991c419e0e885899d34bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
-  stoppingDistance: 5
-  retreatDistance: 2
+  speed: 2
+  stoppingDistance: 4
+  retreatDistance: 3
   startTimeBtwShots: 3
   projectile: {fileID: 4159977661596222018, guid: cffa674dd2c003540bb18b2fe9f4d2fe, type: 3}
   player: {fileID: 0}
+  coinPrefab: {fileID: 2170686964988663700, guid: 41f1537d99a2642cda8db902c7c693b5, type: 3}
+  numberOfCoins: 1
+  bounceForceMin: 2
+  bounceForceMax: 5
+  playerData: {fileID: 11400000, guid: 8aff729d4da8f4e2d87150ea60f963a0, type: 2}
+  _health: 6
+  _targetable: 1
+  damageAmount: 1
 --- !u!61 &7033792709522629618
 BoxCollider2D:
   m_ObjectHideFlags: 0

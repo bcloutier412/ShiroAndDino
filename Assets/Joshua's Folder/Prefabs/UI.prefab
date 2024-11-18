@@ -539,7 +539,6 @@ MonoBehaviour:
   GameData: {fileID: 11400000, guid: 6d2ea8888917d406e85c191d7365acb8, type: 2}
   PlayerData: {fileID: 11400000, guid: 8aff729d4da8f4e2d87150ea60f963a0, type: 2}
   pauseMenuScreen: {fileID: 5963347180027989706}
-  loadScene: 0
 --- !u!1 &2594851778243734703
 GameObject:
   m_ObjectHideFlags: 0
@@ -1430,8 +1429,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4032274453661603972}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 131.3003, y: -6.6402044}
   m_SizeDelta: {x: 176.6006, y: 93.28}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1576,8 +1575,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -860, y: 435.4}
-  m_SizeDelta: {x: 80, y: 80}
+  m_AnchoredPosition: {x: -331, y: 89}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3434497089601213781
 CanvasRenderer:
