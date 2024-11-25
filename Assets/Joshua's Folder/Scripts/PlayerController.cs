@@ -254,6 +254,8 @@ public class PlayerController : MonoBehaviour
             if (!isInvincible)
             {
                 TakeDamage(1); // Ensure the correct amount of damage is applied
+            
+
             }
         }
     }
@@ -265,7 +267,10 @@ public class PlayerController : MonoBehaviour
         playerData.currentHealth = Mathf.Clamp(playerData.currentHealth, 0, playerData.maxHealth); // Clamp health
 
         Debug.Log("Current Health after damage: " + playerData.currentHealth);
-
+          if (sfx1 != null)
+    {
+        swordSlashAudio.PlayOneShot(sfx1);
+    }
         if (playerData.currentHealth <= 0)
         {
             Die();

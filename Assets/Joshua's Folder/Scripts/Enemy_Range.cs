@@ -111,8 +111,8 @@ void FixedUpdate()
         }
 
         // Update Blend Tree parameters
-        animator.SetFloat("MoveX", direction.x);
-        animator.SetFloat("MoveY", direction.y);
+        animator.SetFloat("X", direction.x);
+        animator.SetFloat("Y", direction.y);
 
         // Flip the sprite for left movement
         spriteRenderer.flipX = direction.x < 0;

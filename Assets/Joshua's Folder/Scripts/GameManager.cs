@@ -96,7 +96,7 @@ public void RestartGame()
         // UpdateHealthDisplay(GameData.currentHealth); // If you have a method for health display
 
         // Reload the current scene
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
         Debug.Log("Scene reloaded");
 }
 

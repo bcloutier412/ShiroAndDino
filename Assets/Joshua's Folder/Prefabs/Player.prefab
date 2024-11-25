@@ -231,7 +231,7 @@ MonoBehaviour:
   doubleHitWindow: 1
   doubleHitCooldown: 2
   swordSlashAudio: {fileID: 6124349107016720655}
-  sfx1: {fileID: 0}
+  sfx1: {fileID: 8300000, guid: 8100de48dc30fff409334951ba36148e, type: 3}
   sfx2: {fileID: 0}
   sfx3: {fileID: 0}
   isInvincible: 0
