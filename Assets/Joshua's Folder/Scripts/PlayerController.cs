@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
             SceneManager.LoadScene(sceneIndex);
             // playerData.SaveSceneIndex(currentSceneIndex);
         }
-        //Vector3 startPosition = playerData.LoadPlayerPosition();
+        Vector3 startPosition = playerData.LoadPlayerPosition();
     }
 
 
