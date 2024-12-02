@@ -15,10 +15,16 @@ public class Enemy : MonoBehaviour, Idamageable
     public float bounceForceMax = 5f; // Maximum bounce force for coins
     private bool isDead = false;
 
+    public TrackableObject trackableObject; // Reference to TrackableObject script
+
     private Vector2 previousPosition; // To store previous position for direction check
 
-    public PlayerData playerData;  // Reference to the PlayerData ScriptableObject
+    public PlayerData playerData; // Reference to the PlayerData ScriptableObject
 
+    public float _health = 6;
+    public bool _targetable = true;
+
+    public float damageAmount = 1; // Damage dealt to the player upon contact
 
     public float Health
     {
@@ -32,20 +38,18 @@ public class Enemy : MonoBehaviour, Idamageable
                 Targetable = false;
                 HandleDeath(); // Handle physics immediately upon death
                 DropCoins(); // Drop coins when enemy dies
+                if (trackableObject != null)
+                {
+                    trackableObject.MarkAsDestroyed(); // Mark the enemy as destroyed
+                }
             }
         }
-        get
-        {
-            return _health;
-        }
+        get { return _health; }
     }
 
     public bool Targetable
     {
-        get
-        {
-            return _targetable;
-        }
+        get { return _targetable; }
         set
         {
             _targetable = value;
@@ -53,20 +57,21 @@ public class Enemy : MonoBehaviour, Idamageable
         }
     }
 
-    public float _health = 6;
-    public bool _targetable = true;
-
-    public int damageAmount = 1; // Amount of damage this enemy does
-
     void Start()
     {
         physicsCollider = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        
+
         // Initialize previousPosition with the starting position
         previousPosition = rb.position;
+
+        // Automatically assign the TrackableObject script if not manually set
+        if (trackableObject == null)
+        {
+            trackableObject = GetComponent<TrackableObject>();
+        }
     }
 
     void Update()
@@ -103,7 +108,20 @@ public class Enemy : MonoBehaviour, Idamageable
     {
         for (int i = 0; i < numberOfCoins; i++)
         {
-            Instantiate(coinPrefab, transform.position, Quaternion.identity);
+            GameObject coin = Instantiate(coinPrefab, transform.position, Quaternion.identity);
+
+            // Apply a random bounce force to the coin
+            Rigidbody2D coinRb = coin.GetComponent<Rigidbody2D>();
+            if (coinRb != null)
+            {
+                Vector2 bounceDirection = new Vector2(
+                    Random.Range(-1f, 1f),
+                    Random.Range(0.8f, 1.2f)
+                ).normalized;
+
+                float bounceForce = Random.Range(bounceForceMin, bounceForceMax);
+                coinRb.AddForce(bounceDirection * bounceForce, ForceMode2D.Impulse);
+            }
         }
     }
 
@@ -128,11 +146,10 @@ public class Enemy : MonoBehaviour, Idamageable
         spriteRenderer.color = Color.white;
     }
 
-
     public void AttackPlayer(GameObject player)
     {
         if (isDead) return;
-        
+
         PlayerController playerController = player.GetComponent<PlayerController>();
         if (playerController != null && !playerController.isInvincible)
         {
@@ -143,9 +160,8 @@ public class Enemy : MonoBehaviour, Idamageable
 
     public void DestroySelf()
     {
-        throw new System.NotImplementedException();
+        Destroy(gameObject);
     }
-
     public void OnHit(float damage)
     {
         throw new System.NotImplementedException();
