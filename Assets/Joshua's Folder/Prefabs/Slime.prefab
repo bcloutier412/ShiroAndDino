@@ -167,6 +167,7 @@ MonoBehaviour:
   numberOfCoins: 1
   bounceForceMin: 20
   bounceForceMax: 30
+  playerData: {fileID: 11400000, guid: 8aff729d4da8f4e2d87150ea60f963a0, type: 2}
   _health: 6
   _targetable: 1
   damageAmount: 1
@@ -203,7 +204,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fcb3c2db13ba4cef82e296a95d4b8db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 448565033735750986, guid: 36762dce28fd1491ca42a203a861237e, type: 3}
   speed: 1
   stoppingDistance: 0.8
   attackRange: 0.8

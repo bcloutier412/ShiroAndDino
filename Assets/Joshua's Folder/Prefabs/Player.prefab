@@ -201,7 +201,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.032982945, y: -0.32884955}
+  m_Offset: {x: -0.032982945, y: 0.0034604073}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -212,7 +212,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.45642877, y: 0.27354038}
+  m_Size: {x: 0.45642877, y: 0.9381604}
   m_EdgeRadius: 0
 --- !u!114 &2417518357765255506
 MonoBehaviour:
@@ -226,17 +226,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a60c8975f7d254ae88e3857e2e6d9f4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerData: {fileID: 0}
+  playerData: {fileID: 11400000, guid: 8aff729d4da8f4e2d87150ea60f963a0, type: 2}
   swordAttack: {fileID: 699357878754292605}
-  doubleHitWindow: 0.5
+  doubleHitWindow: 1
   doubleHitCooldown: 2
   swordSlashAudio: {fileID: 6124349107016720655}
-  sfx1: {fileID: 0}
+  sfx1: {fileID: 8300000, guid: 8100de48dc30fff409334951ba36148e, type: 3}
   sfx2: {fileID: 0}
   sfx3: {fileID: 0}
   isInvincible: 0
-  currentHealth: 10
-  healthBar: {fileID: 0}
+  sceneIndex: 2
   movementFilter:
     useTriggers: 0
     useLayerMask: 0

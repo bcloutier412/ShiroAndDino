@@ -157,6 +157,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coinValue: 1
+  coinData: {fileID: 11400000, guid: 6d2ea8888917d406e85c191d7365acb8, type: 2}
+  initialBounceForce: 5
+  bounceDamping: 0.9
+  minBounceThreshold: 0.1
 --- !u!50 &8179469782051224365
 Rigidbody2D:
   serializedVersion: 4

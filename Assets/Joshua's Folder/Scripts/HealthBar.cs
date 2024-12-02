@@ -4,25 +4,48 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    public int maxHealth = 6;             // Maximum health the player can have (e.g., 6 for 3 full hearts)
-    public int currentHealth;             // Player's current health
-    public Image[] hearts;                // Array of Image components for hearts
-    public Sprite fullHeart;              // Full heart sprite
-    public Sprite halfHeart;              // Half heart sprite (optional)
-    public Sprite emptyHeart;             // Empty heart sprite
+    public PlayerData playerData; // Reference to the PlayerData ScriptableObject
+    public Image[] hearts;         // Array of Image components for hearts
+    public Sprite fullHeart;       // Full heart sprite
+    public Sprite halfHeart;       // Half heart sprite (optional)
+    public Sprite emptyHeart;      // Empty heart sprite
+
+    private int healthCounter;
 
     void Start()
     {
+        // Initialize current health from PlayerData and update the health bar
+        // playerData.currentHealth = playerData.maxHealth; // Ensure health is set at the start
+        if(playerData.currentHealth == 0)
+        {
+            playerData.maxHealth = playerData.currentHealth;
+        }
+        healthCounter = playerData.currentHealth;
         UpdateHealthBar();
+    }
+
+    void FixedUpdate()
+    {
+       // UpdateHealthBar();
+       if (playerData.currentHealth < healthCounter)
+       {
+         healthCounter--;
+         UpdateHealthBar();
+         // Play hurt sound here
+         // Play particle effects here
+       }
+       else if (playerData.currentHealth > healthCounter)
+       {
+        UpdateHealthBar();
+       }
     }
 
     public void UpdateHealthBar()
     {
-        Debug.Log("Updating health bar. Current Health: " + currentHealth);
+        Debug.Log("Updating health bar. Current Health: " + playerData.currentHealth);
         for (int i = 0; i < hearts.Length; i++)
         {
-            int heartValue = Mathf.Clamp(currentHealth - (i * 2), 0, 2);
-            //Debug.Log("Heart " + i + " value: " + heartValue);
+            int heartValue = Mathf.Clamp(playerData.currentHealth - (i * 2), 0, 2);
 
             if (heartValue == 2)
             {
@@ -33,24 +56,25 @@ public class HealthBar : MonoBehaviour
                 hearts[i].sprite = halfHeart;  // Display half heart (if applicable)
             }
             else
-            { 
+            {
                 hearts[i].sprite = emptyHeart; // Display empty heart
             }
         }
     }
 
-
-    public void TakeDamage(int damage)
+   /* 
+   public void TakeDamage(int damage)
     {
-        currentHealth -= damage;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        playerData.currentHealth -= damage; // Use the current health from PlayerData
+        //playerData.currentHealth = Mathf.Clamp(playerData.currentHealth, 0, playerData.maxHealth);
         UpdateHealthBar();
     }
+    */
 
     public void Heal(int healAmount)
     {
-        currentHealth += healAmount;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        playerData.currentHealth += healAmount; // Use the current health from PlayerData
+        //playerData.currentHealth = Mathf.Clamp(playerData.currentHealth, 0, playerData.maxHealth);
         UpdateHealthBar();
     }
 }

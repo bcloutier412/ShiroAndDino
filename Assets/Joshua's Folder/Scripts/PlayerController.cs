@@ -1,15 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     public PlayerData playerData; // Reference to the ScriptableObject
 
+
     private float moveSpeed;
     private float collisionOffset;
-    
+
     public SwordAttack swordAttack;
 
     Vector2 movementInput;
@@ -19,7 +22,7 @@ public class PlayerController : MonoBehaviour
 
     private bool canMove = true;
     private SpriteRenderer spriteRenderer;
-    private Color originalColor;  
+    private Color originalColor;
 
     // New variables for double hit functionality
     private bool canDoubleHit = false;
@@ -29,47 +32,67 @@ public class PlayerController : MonoBehaviour
     public float doubleHitCooldown = 5.0f;
     private float doubleHitCooldownTimer; // Timer for double hit cooldown
 
-
     public AudioSource swordSlashAudio;
     public AudioClip sfx1, sfx2, sfx3;
 
     private float invincibilityTimer;
     public bool isInvincible = false; // Invincibility state
 
-    public int currentHealth;
-    public HealthBar healthBar;
+    public int sceneIndex;
+
 
     public ContactFilter2D movementFilter;
 
     private GameManager gameManager;
 
+    Vector3 startPosition;
+
     void Start()
     {
+
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalColor = spriteRenderer.color;
         gameManager = FindObjectOfType<GameManager>();
-        healthBar = FindObjectOfType<HealthBar>();
-        
-        if (healthBar != null)
-        {
-            currentHealth = playerData.maxHealth; // Use data from ScriptableObject
-            healthBar.currentHealth = currentHealth;
-            healthBar.UpdateHealthBar();
-        }
-        else
-        {
-            Debug.LogError("HealthBar is not assigned or found in the scene.");
-        }
 
-        // Assign values from the ScriptableObject
         moveSpeed = playerData.moveSpeed;
         collisionOffset = playerData.collisionOffset;
+        startPosition = playerData.LoadPlayerPosition();
+        transform.position = startPosition;
+        //Vector3 startPosition = playerData.LoadPlayerPosition();
+
+        if (playerData.finishedLoadingData == true)
+            return;
+        else
+        {
+            LoadPlayerData();
+            playerData.finishedLoadingData = true;
+        }
     }
+
+    void LoadPlayerData()
+    {
+        collisionOffset = playerData.collisionOffset;
+
+        // Load the saved scene index
+        int sceneIndex = playerData.LoadSceneIndex();
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        // Only load a new scene if the saved index is different from the current scene
+        if (sceneIndex != currentSceneIndex)
+        {
+            Debug.Log($"Loading scene index: {sceneIndex} (current: {currentSceneIndex})");
+            SceneManager.LoadScene(sceneIndex);
+            // playerData.SaveSceneIndex(currentSceneIndex);
+        }
+        Vector3 startPosition = playerData.LoadPlayerPosition();
+    }
+
+
 
     void FixedUpdate()
     {
+        // playerData.SavePlayerPosition(transform.position);
         if (canMove)
         {
             HandleMovement();
@@ -217,7 +240,7 @@ public class PlayerController : MonoBehaviour
     {
         canMove = false;
     }
-    
+
     public void UnlockMovement()
     {
         canMove = true;
@@ -231,27 +254,33 @@ public class PlayerController : MonoBehaviour
             if (!isInvincible)
             {
                 TakeDamage(1); // Ensure the correct amount of damage is applied
+            
+
             }
         }
     }
 
     public void TakeDamage(int damage)
     {
-        currentHealth -= damage;
-        currentHealth = Mathf.Clamp(currentHealth, 0, playerData.maxHealth);  // Clamp health between 0 and max
+        Debug.Log("Player took damage: " + damage);
+        playerData.currentHealth -= damage; // Directly update PlayerData's current health
+        playerData.currentHealth = Mathf.Clamp(playerData.currentHealth, 0, playerData.maxHealth); // Clamp health
 
-        if (currentHealth <= 0)
+        Debug.Log("Current Health after damage: " + playerData.currentHealth);
+          if (sfx1 != null)
+    {
+        swordSlashAudio.PlayOneShot(sfx1);
+    }
+        if (playerData.currentHealth <= 0)
         {
             Die();
         }
 
-        // Update the health bar
-        if (healthBar != null)
-        {
-            healthBar.currentHealth = currentHealth;
-            healthBar.UpdateHealthBar();  // Update the health bar visuals
-        }
+
+
     }
+
+
 
     void Die()
     {
@@ -261,29 +290,42 @@ public class PlayerController : MonoBehaviour
     }
 
     public void StartInvincibility()
-{
-    isInvincible = true;
-    invincibilityTimer = playerData.invincibilityDuration; // Use invincibility duration from ScriptableObject
-    StartCoroutine(HandleInvincibilityFrames());
-}
-
-private IEnumerator HandleInvincibilityFrames()
-{
-    // Flash the player's color or make them transparent during invincibility
-    float elapsedTime = 0f;
-
-    while (elapsedTime < invincibilityTimer)
     {
-        // Toggle the visibility of the player sprite or play an invincibility animation
-        spriteRenderer.color = Color.red; // Example of making the player invisible
-        yield return new WaitForSeconds(0.1f);
-        spriteRenderer.color = originalColor;
-        yield return new WaitForSeconds(0.1f);
-
-        elapsedTime += 0.2f; // Update elapsed time
+        isInvincible = true;
+        invincibilityTimer = playerData.invincibilityDuration; // Use invincibility duration from ScriptableObject
+        StartCoroutine(HandleInvincibilityFrames());
     }
 
-    // End invincibility
-    isInvincible = false;
-}
+    private IEnumerator HandleInvincibilityFrames()
+    {
+        // Flash the player's color or make them transparent during invincibility
+        float elapsedTime = 0f;
+
+        while (elapsedTime < invincibilityTimer)
+        {
+            // Toggle the visibility of the player sprite or play an invincibility animation
+            spriteRenderer.color = Color.red; // Example of making the player invisible
+            yield return new WaitForSeconds(0.1f);
+            spriteRenderer.color = originalColor;
+            yield return new WaitForSeconds(0.1f);
+
+            elapsedTime += 0.2f; // Update elapsed time
+        }
+        // End invincibility
+        isInvincible = false;
+    }
+
+    private void OnApplicationQuit()
+    {
+        // Save the player's current position
+        playerData.SavePlayerPosition(transform.position);
+
+        // Save the current scene build index before quitting
+        sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        playerData.SaveSceneIndex(sceneIndex);
+        playerData.finishedLoadingData = false;
+    }
+
+
+
 }

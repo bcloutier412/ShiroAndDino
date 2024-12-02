@@ -9,12 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baaf0c2e4efc847dfb5cc6b168e571c7, type: 3}
-  m_Name: PlayerData
+  m_Script: {fileID: 11500000, guid: 0a01376251002469787b5df7eb017408, type: 3}
+  m_Name: GameData
   m_EditorClassIdentifier: 
-  moveSpeed: 6
-  collisionOffset: 0.05
-  doubleHitWindow: 2
-  doubleHitCooldown: 2
-  invincibilityDuration: 1.5
-  maxHealth: 10
+  totalCoinsCollected: 0

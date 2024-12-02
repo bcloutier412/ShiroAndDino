@@ -15,6 +15,11 @@ public class Enemy : MonoBehaviour, Idamageable
     public float bounceForceMax = 5f; // Maximum bounce force for coins
     private bool isDead = false;
 
+    private Vector2 previousPosition; // To store previous position for direction check
+
+    public PlayerData playerData;  // Reference to the PlayerData ScriptableObject
+
+
     public float Health
     {
         set
@@ -59,29 +64,45 @@ public class Enemy : MonoBehaviour, Idamageable
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        
+        // Initialize previousPosition with the starting position
+        previousPosition = rb.position;
+    }
+
+    void Update()
+    {
+        // Calculate movement direction by comparing current and previous positions
+        Vector2 movementDirection = rb.position - previousPosition;
+
+        // Flip the sprite based on movement direction
+        if (movementDirection.x > 0)
+        {
+            spriteRenderer.flipX = false; // Facing right
+        }
+        else if (movementDirection.x < 0)
+        {
+            spriteRenderer.flipX = true; // Facing left
+        }
+
+        // Update the previousPosition for the next frame
+        previousPosition = rb.position;
     }
 
     private void HandleDeath()
     {
-        // Stop physics immediately when death occurs
         rb.velocity = Vector2.zero; // Stop all movement
         rb.bodyType = RigidbodyType2D.Kinematic; // Make rigidbody non-responsive to physics
         rb.simulated = false; // Disable all physics interactions
+        physicsCollider.enabled = false; // Disable physics collider
 
-        // Disable the physics collider to prevent collisions
-        physicsCollider.enabled = false; 
-
-        // Optionally, switch to a trigger collider for post-death interactions (e.g., animation)
         Collider2D triggerCollider = gameObject.AddComponent<BoxCollider2D>();
         triggerCollider.isTrigger = true;
     }
 
-    // Drop coins when enemy is defeated
     private void DropCoins()
     {
         for (int i = 0; i < numberOfCoins; i++)
         {
-            // Instantiate the coin at the enemy's position
             Instantiate(coinPrefab, transform.position, Quaternion.identity);
         }
     }
@@ -93,20 +114,12 @@ public class Enemy : MonoBehaviour, Idamageable
 
     public void OnHit(float damage, Vector2 knockback)
     {
-        if (isDead) return;  // Prevent further damage if already dead
+        if (isDead) return;
         Health -= damage;
         print("Hit");
         spriteRenderer.color = Color.red;
         StartCoroutine(ResetColor());
         rb.AddForce(knockback);
-    }
-
-    public void OnHit(float damage)
-    {
-        if (isDead) return;  // Prevent further damage if already dead
-        Health -= damage;
-        spriteRenderer.color = Color.red;
-        StartCoroutine(ResetColor());
     }
 
     IEnumerator ResetColor()
@@ -115,19 +128,25 @@ public class Enemy : MonoBehaviour, Idamageable
         spriteRenderer.color = Color.white;
     }
 
+
     public void AttackPlayer(GameObject player)
     {
-        if (isDead) return; // Exit if enemy is dead
-
+        if (isDead) return;
+        
         PlayerController playerController = player.GetComponent<PlayerController>();
         if (playerController != null && !playerController.isInvincible)
         {
-            playerController.StartInvincibility(); // Trigger invincibility on the player
-            playerController.TakeDamage(damageAmount); // Apply damage to the player
+            playerController.StartInvincibility();
+            playerController.TakeDamage(damageAmount);
         }
     }
 
     public void DestroySelf()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnHit(float damage)
     {
         throw new System.NotImplementedException();
     }
