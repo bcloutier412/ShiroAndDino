@@ -6,6 +6,7 @@ public class CoinCollect : MonoBehaviour
 {
     public int coinValue = 1;  // The value of the coin
     public GameData coinData;  // Reference to the CoinData ScriptableObject
+    public TrackableObject trackableObject; // Reference to the TrackableObject ScriptableObject
 
     private Rigidbody2D rb;
     private bool isBouncing = true;
@@ -66,6 +67,12 @@ public class CoinCollect : MonoBehaviour
         // Use the ScriptableObject to track total coins
         coinData.totalCoinsCollected += coinValue;  
         Debug.Log("Coins collected: " + coinData.totalCoinsCollected);
+
+        // Call the MarkAsDestroyed method to track the coin as destroyed
+        if (trackableObject != null)
+        {
+            trackableObject.MarkAsDestroyed();
+        }
 
         // Assuming GameManager has a method to update the coin display
         FindObjectOfType<GameManager>().UpdateCoinDisplay(coinData.totalCoinsCollected);

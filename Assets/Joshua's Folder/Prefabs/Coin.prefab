@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 4532624065531176843}
   - component: {fileID: 6535446451933034970}
   - component: {fileID: 8179469782051224365}
+  - component: {fileID: 5865829171117118101}
+  - component: {fileID: 8731040165323802207}
   m_Layer: 0
   m_Name: Coin
   m_TagString: Untagged
@@ -158,6 +160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coinValue: 1
   coinData: {fileID: 11400000, guid: 6d2ea8888917d406e85c191d7365acb8, type: 2}
+  trackableObject: {fileID: 8731040165323802207}
   initialBounceForce: 5
   bounceDamping: 0.9
   minBounceThreshold: 0.1
@@ -188,3 +191,30 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &5865829171117118101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2170686964988663700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 257a0f5350410804d93f4dbb557124d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trackableObject: {fileID: 8731040165323802207}
+--- !u!114 &8731040165323802207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2170686964988663700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcfa4aebcf31d07479d4782104bd7e8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectID: 
+  tracker: {fileID: 11400000, guid: 74aa2e33fbdb2704e9e651777ac87510, type: 2}
