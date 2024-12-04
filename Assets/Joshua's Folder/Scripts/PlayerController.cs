@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
         collisionOffset = playerData.collisionOffset;
         startPosition = playerData.LoadPlayerPosition();
         transform.position = startPosition;
-        //Vector3 startPosition = playerData.LoadPlayerPosition();
+       
 
         if (playerData.finishedLoadingData == true)
             return;
@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
             SceneManager.LoadScene(sceneIndex);
             // playerData.SaveSceneIndex(currentSceneIndex);
         }
-        Vector3 startPosition = playerData.LoadPlayerPosition();
+       // Vector3 startPosition = playerData.LoadPlayerPosition();
     }
 
 
@@ -189,6 +189,7 @@ public class PlayerController : MonoBehaviour
 
     public void StartSwordAttack()
     {
+        swordSlashAudio.pitch = UnityEngine.Random.Range(0.95f, 1.5f);
         swordSlashAudio.Play();
 
         if (spriteRenderer.flipX)
