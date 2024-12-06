@@ -77,7 +77,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1090767439
   m_SortingLayer: 4
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: -372014471, guid: 240687926669d41e1a50ee07ba1c0e11, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -167,6 +167,7 @@ MonoBehaviour:
   numberOfCoins: 1
   bounceForceMin: 20
   bounceForceMax: 30
+  trackableObject: {fileID: 0}
   playerData: {fileID: 11400000, guid: 8aff729d4da8f4e2d87150ea60f963a0, type: 2}
   _health: 6
   _targetable: 1
