@@ -20,6 +20,6 @@ MonoBehaviour:
   maxHealth: 10
   currentHealth: 10
   originalPosition: {x: 2.6, y: -2.5, z: 0}
-  savePosition: {x: 2.7882261, y: 42.22289, z: 0}
-  sceneIndex: 2
+  savePosition: {x: 10.565628, y: -1.8946315, z: 0}
+  sceneIndex: 3
   finishedLoadingData: 0

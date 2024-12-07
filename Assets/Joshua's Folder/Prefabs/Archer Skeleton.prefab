@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7130036357728970890}
   - component: {fileID: 8731023039653250394}
   - component: {fileID: 7033792709522629618}
+  - component: {fileID: 2132272143646570059}
+  - component: {fileID: 7988944344476184694}
   m_Layer: 6
   m_Name: Archer Skeleton
   m_TagString: Enemy
@@ -109,6 +111,8 @@ MonoBehaviour:
   bounceForceMin: 2
   bounceForceMax: 5
   playerData: {fileID: 11400000, guid: 8aff729d4da8f4e2d87150ea60f963a0, type: 2}
+  attackDistance: 10
+  trackableObject: {fileID: 0}
   _health: 6
   _targetable: 1
   damageAmount: 1
@@ -157,3 +161,51 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.41049683, y: 0.65840113}
   m_EdgeRadius: 0
+--- !u!95 &2132272143646570059
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411887652306244268}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6a29ff05cd5ff744fa4d31b06c0a0177, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!50 &7988944344476184694
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1411887652306244268}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 50
+  m_AngularDrag: 0.5
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4

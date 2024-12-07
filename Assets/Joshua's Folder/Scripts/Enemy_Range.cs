@@ -30,6 +30,7 @@ public class Enemy_Range : MonoBehaviour, Idamageable
 
     public float attackDistance = 10f; // Maximum distance for detecting the player
 
+    public TrackableObject trackableObject; // Reference to TrackableObject script
     public float Health
     {
         set
@@ -42,6 +43,10 @@ public class Enemy_Range : MonoBehaviour, Idamageable
                 Targetable = false;
                 HandleDeath();
                 DropCoins();
+                if (trackableObject != null)
+                {
+                    trackableObject.MarkAsDestroyed(); // Mark the enemy as destroyed
+                }
             }
         }
         get
