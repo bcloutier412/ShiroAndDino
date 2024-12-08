@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baaf0c2e4efc847dfb5cc6b168e571c7, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 5
   collisionOffset: 0.05
   doubleHitWindow: 2
   doubleHitCooldown: 2
   invincibilityDuration: 1.5
   maxHealth: 10
-  currentHealth: 10
+  currentHealth: 7
   originalPosition: {x: 2.6, y: -2.5, z: 0}
-  savePosition: {x: 10.565628, y: -1.8946315, z: 0}
-  sceneIndex: 3
+  savePosition: {x: 45.77451, y: 1.315285, z: 0}
+  sceneIndex: 2
   finishedLoadingData: 0
