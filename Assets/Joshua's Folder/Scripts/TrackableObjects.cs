@@ -20,7 +20,7 @@ public class TrackableObject : MonoBehaviour
 
     public void MarkAsDestroyed()
     {
-        if (tracker != null && !tracker.destroyedObjectIDs.Contains(objectID))
+        if (tracker != null && !string.IsNullOrEmpty(objectID) && !tracker.destroyedObjectIDs.Contains(objectID))
         {
             tracker.destroyedObjectIDs.Add(objectID); // Add ID to the list
         }

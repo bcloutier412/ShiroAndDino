@@ -22,6 +22,8 @@ public class Enemy_Range : MonoBehaviour, Idamageable
     public float bounceForceMax = 5f; // Maximum bounce force for coins
     private bool isDead = false;
 
+    public float destructionDelay = 2f;
+
     private Rigidbody2D rb;
     private Collider2D physicsCollider;
     private SpriteRenderer spriteRenderer;
@@ -151,6 +153,8 @@ void FixedUpdate()
 
         Collider2D triggerCollider = gameObject.AddComponent<BoxCollider2D>();
         triggerCollider.isTrigger = true;
+        Destroy(gameObject, destructionDelay);
+        
     }
 
     private void DropCoins()
@@ -201,16 +205,4 @@ void FixedUpdate()
     Gizmos.DrawWireSphere(transform.position, attackDistance);
 }
 
-
-    /*public void AttackPlayer(GameObject player)
-    {
-        if (isDead) return;
-
-        PlayerController playerController = player.GetComponent<PlayerController>();
-        if (playerController != null && !playerController.isInvincible)
-        {
-            playerController.StartInvincibility();
-            playerController.TakeDamage(damageAmount);
-        }
-    }*/
 }

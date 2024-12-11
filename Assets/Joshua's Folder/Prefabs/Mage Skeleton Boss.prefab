@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 924291777083195905}
   - component: {fileID: 156221071654877891}
   - component: {fileID: 4276794022425407265}
+  - component: {fileID: -3654657651681754410}
   m_Layer: 6
   m_Name: Mage Skeleton Boss
   m_TagString: Enemy
@@ -238,3 +239,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackableObject: {fileID: 156221071654877891}
+--- !u!114 &-3654657651681754410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23218078407764705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dbfa83da4f8d4a59982b76f5bdccdf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPrefabs: []
+  spawnPoints: []
+  initialSpawnInterval: 5
+  maxEnemies: 10

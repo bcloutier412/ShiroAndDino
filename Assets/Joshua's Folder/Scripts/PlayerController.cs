@@ -262,25 +262,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
-    {
-        Debug.Log("Player took damage: " + damage);
-        playerData.currentHealth -= damage; // Directly update PlayerData's current health
-        playerData.currentHealth = Mathf.Clamp(playerData.currentHealth, 0, playerData.maxHealth); // Clamp health
+  public void TakeDamage(int damage)
+{
+    Debug.Log("Player took damage: " + damage);
+    playerData.currentHealth -= damage; // Directly update PlayerData's current health
+    playerData.currentHealth = Mathf.Clamp(playerData.currentHealth, 0, playerData.maxHealth); // Clamp health
 
-        Debug.Log("Current Health after damage: " + playerData.currentHealth);
-          if (sfx1 != null)
+    Debug.Log("Current Health after damage: " + playerData.currentHealth);
+
+    if (sfx1 != null)
     {
+        // Set the pitch to a random value between 0.95 and 1.05
+        swordSlashAudio.pitch = UnityEngine.Random.Range(0.95f, 1.05f);
         swordSlashAudio.PlayOneShot(sfx1);
     }
-        if (playerData.currentHealth <= 0)
-        {
-            Die();
-        }
 
-
-
+    if (playerData.currentHealth <= 0)
+    {
+        Die();
     }
+}
 
 
 

@@ -156,8 +156,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90fcf5cf517aa462489abc1f2c9d25c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinValue: 100
+  coinValue: 200
   coinData: {fileID: 11400000, guid: 6d2ea8888917d406e85c191d7365acb8, type: 2}
+  trackableObject: {fileID: 0}
+  coinCollectSound: {fileID: 8300000, guid: 0a9ab88848e55344f9150d4c739fb36a, type: 3}
   initialBounceForce: 5
   bounceDamping: 0.9
   minBounceThreshold: 0.1
