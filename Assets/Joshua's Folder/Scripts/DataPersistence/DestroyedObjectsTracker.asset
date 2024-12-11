@@ -12,5 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f35b03a10beb176428e50e3eb4d33366, type: 3}
   m_Name: DestroyedObjectsTracker
   m_EditorClassIdentifier: 
-  destroyedObjectIDs:
-  - coin_2
+  destroyedObjectIDs: []
